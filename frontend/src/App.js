@@ -1,6 +1,6 @@
 import './App.css';
 import React, { Component } from "react";
-import Search from './/components/search.js'
+import SessionForm from './components/session-form.js'
 // import useFetch from './hooks/useFetch';
 import axios from "axios";
 
@@ -50,7 +50,7 @@ class App extends Component{
               {/* <ul className="list-group list-group-flush border-top-0">
                 {this.renderItems()}
               </ul> */}
-              <Search/>
+              <SessionForm />
             </div>
           </div>
         </div>
