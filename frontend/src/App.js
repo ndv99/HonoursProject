@@ -1,19 +1,8 @@
 import './App.css';
 import React, { Component } from "react";
+import Search from './/components/search.js'
+// import useFetch from './hooks/useFetch';
 import axios from "axios";
-
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <h1>This is the web app for my honours project.</h1>
-
-
-//       </header>
-//     </div>
-//   );
-// }
 
 class App extends Component{
 
@@ -51,15 +40,17 @@ class App extends Component{
   }
 
   render(){
+
     return(
       <main>
-        <h1 className="text-center my-4">Sessions list</h1>
+        <h1 className="text-center my-4">Join a session</h1>
         <div className='row'>
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">
-              <ul className="list-group list-group-flush border-top-0">
+              {/* <ul className="list-group list-group-flush border-top-0">
                 {this.renderItems()}
-              </ul>
+              </ul> */}
+              <Search/>
             </div>
           </div>
         </div>
