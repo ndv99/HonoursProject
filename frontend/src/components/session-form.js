@@ -62,7 +62,7 @@ class SessionForm extends Component {
                     onChange={this.handleChange}
                     placeholder="Enter your session code here"
                 />
-                <Button variant="primary" type="submit">Join</Button>
+                <Button color="primary" type="submit">Join</Button>
             </Form>
         )
     }

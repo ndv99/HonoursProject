@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import SessionForm from './components/session-form.js'
 // import useFetch from './hooks/useFetch';
 import axios from "axios";
+import { Form, Button } from 'reactstrap';
 
 class App extends Component{
 
@@ -47,11 +48,22 @@ class App extends Component{
         <div className='row'>
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">
-              <ul className="list-group list-group-flush border-top-0">
+              {/* <ul className="list-group list-group-flush border-top-0">
                 {this.renderItems()}
-              </ul>
+              </ul> */}
               <SessionForm />
             </div>
+          </div>
+        </div>
+
+        <h1 className="text-center my-4">Create a new session</h1>
+        <div className="row">
+          <div className="col-md-6 col-sm-10 mx-auto p-0">
+              <div className="card p-3">
+                <Form>
+                  <Button color="success" type="submit">Generate code</Button>
+                </Form>
+              </div>
           </div>
         </div>
       </main>
