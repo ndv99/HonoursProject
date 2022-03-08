@@ -14,6 +14,7 @@ class Session(models.Model):
         if self.join_code == 0 or self.join_code == "0":
             code = random.randint(100000, 1000000)
             self.set_join_code(code)
+            print("New session created")
         return super().save(*args, **kwargs)
 
     def set_join_code(self, code):

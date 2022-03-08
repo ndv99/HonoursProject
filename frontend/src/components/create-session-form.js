@@ -3,6 +3,8 @@ import { Form, Button } from 'reactstrap'
 import { Component } from 'react'
 import axios from 'axios';
 
+// axios.defaults.xsrfHeaderName = "X-CSRFToken";
+
 class CreateSessionForm extends Component{
     constructor(props) {
         super(props);
@@ -24,12 +26,15 @@ class CreateSessionForm extends Component{
         this.setState({value: event.target.value});
     }
 
-    handleSubmit(event) {
+    handleSubmit() {
         this.refresh_list()
 
-        
+        const new_session = {join_code: 0, time_delay: 0}
 
-        event.preventDefault();
+        axios
+        .post("/api/sessions/", new_session)
+        .then((res) => this.refreshList());
+
     }
 
     refresh_list = () => {
@@ -41,9 +46,10 @@ class CreateSessionForm extends Component{
 
     render(){
         return(
-            <Form>
-                  <Button color="success" type="submit">Generate code</Button>
+            <Form onSubmit={this.handleSubmit}>
+                <Button color="success" type="submit">Generate code</Button>
             </Form>
+            
         )
     }
 }
