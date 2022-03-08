@@ -3,7 +3,7 @@ import { Form, Button } from 'reactstrap'
 import { Component } from 'react'
 import axios from 'axios';
 
-class SessionForm extends Component {
+class JoinSessionForm extends Component {
     constructor(props) {
         super(props);
         this.state  = {
@@ -68,4 +68,4 @@ class SessionForm extends Component {
     }
 }
 
-export default SessionForm;
+export default JoinSessionForm;
