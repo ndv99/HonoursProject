@@ -33,7 +33,7 @@ class CreateSessionForm extends Component{
 
         axios
         .post("/api/sessions/", new_session)
-        .then((res) => this.refreshList());
+        .then((res) => console.log(res));
 
     }
 
