@@ -4,10 +4,18 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Broadcast } from './pages/broadcast.js';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* <App /> */}
+    <Router>
+      <Routes>
+        <Route path="/" element={<App />}/>
+        <Route path="/broadcast" element={<Broadcast />}/>
+      </Routes>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
