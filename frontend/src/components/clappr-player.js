@@ -3,9 +3,6 @@ import Cookies from 'universal-cookie';
 import { Component } from "react";
 
 class ClapprPlayer extends Component{
-    constructor(props){
-        super(props);
-    }
     
     componentDidMount(){
         const { id, source } = this.props;

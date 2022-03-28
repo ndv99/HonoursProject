@@ -2,6 +2,7 @@ import './../styles/components/search.css'
 import { Form, Button } from 'reactstrap'
 import { Component } from 'react'
 import axios from 'axios';
+import Cookies from 'universal-cookie';
 
 class JoinSessionForm extends Component {
     constructor(props) {
@@ -9,6 +10,7 @@ class JoinSessionForm extends Component {
         this.state  = {
             sessions_list: [],
             value: '',
+            redirect: false,
         };
     
         this.handleChange = this.handleChange.bind(this);
@@ -34,7 +36,11 @@ class JoinSessionForm extends Component {
           })
 
         if (valid_code){
-            alert("Woop woop, you've joined a session!")
+            const cookies = new Cookies();
+            cookies.set('session_code', this.state.value, {path: '/'})
+
+            // this.state.redirect = true;
+            this.setState(this.state.redirect, true)
         } else {
             alert("Uh oh, " + this.state.value + " is not a valid session code!")
         }
@@ -51,7 +57,7 @@ class JoinSessionForm extends Component {
 
     render(){
         return(
-            <Form onSubmit={this.handleSubmit}>
+            <Form onSubmit={this.handleSubmit} action="/waiting">
                 <label htmlFor="session-search">
                     <span className="visually-hidden">Join a session</span>
                 </label>

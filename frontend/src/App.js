@@ -64,9 +64,9 @@ class App extends Component{
           <div className="col-md-6 col-sm-10 mx-auto p-0">
               <div className="card p-3">
                 <CreateSessionForm />
-                <ul className="list-group list-group-flush border-top-0">
+                {/* <ul className="list-group list-group-flush border-top-0">
                   {this.renderItems()}
-                </ul>
+                </ul> */}
               </div>
           </div>
         </div>
