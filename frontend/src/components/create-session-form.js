@@ -36,7 +36,24 @@ class CreateSessionForm extends Component{
     }
 
     handleSubmit(email, password) {
-        console.log("login form submitted")
+        // console.log("login form submitted")
+        // console.log(`Recieved email ${email} and password ${password}`)
+
+        // const f1_auth_link = 'https://api.formula1.com/v2/account/subscriber/authenticate/by-password'
+        // const f1_auth_headers = {
+        //     'apiKey': 'fCUCjWrKPu9ylJwRAv8BpGLEgiAuThx7',
+        //     'User-Agent': 'RaceControl f1viewer'
+        // }
+        // const auth_body = {
+        //     'Login': email,
+        //     'Password': password
+        // }
+
+        // axios.post(f1_auth_link, auth_body, {headers: f1_auth_headers})
+        // .then((res) => console.log(res))
+        // .catch((err) => console.log(err));
+
+
         const new_session = {join_code: 0, time_delay: 0}
 
         axios
@@ -60,18 +77,23 @@ class CreateSessionForm extends Component{
     };
 
     render(){
-        return(
-            <>
-                {this.state.redirect && <Navigate replace to="/broadcast"/>}
-                <Button color="success" onClick={this.toggle}>Generate code</Button>
-                {this.state.modal ? (
-                    <F1LoginModal
-                        toggle={this.toggle}
-                        onSave={this.handleSubmit}
-                    />
-                ): null}
-            </>
-        )
+        if (!this.state.redirect){
+            return(
+                <>
+                    <Button color="success" onClick={this.toggle}>Generate code</Button>
+                    {this.state.modal ? (
+                        <F1LoginModal
+                            toggle={this.toggle}
+                            onSave={this.handleSubmit}
+                        />
+                    ): null}
+                </>
+            )
+        } else {
+            return(
+                <Navigate replace to="/dashboard"/>
+            )
+        }
     }
 }
 

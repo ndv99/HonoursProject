@@ -4,11 +4,16 @@ import { Modal, ModalBody, ModalHeader, ModalFooter, Form, FormGroup, Label, Inp
 class F1LoginModal extends Component{
     constructor(props){
         super(props);
+        this.state ={
+            email: "",
+            password: ""
+        }
     }
 
     handleChange = (e) =>{
         let { name, value } = e.target;
-        this.setState([name], value)
+        // console.log(`hey at least we're getting this far. field name is ${name} and the value is ${value}`)
+        this.setState({[name]: value})
     }
 
     render(){
@@ -25,8 +30,8 @@ class F1LoginModal extends Component{
                                 type="email"
                                 id="login-email"
                                 name="email"
-                                // value={this.state.email}
-                                // onChange={this.handleChange}
+                                value={this.state.email}
+                                onChange={this.handleChange}
                                 placeholder="Email address"
                             />
                         </FormGroup>
@@ -36,12 +41,12 @@ class F1LoginModal extends Component{
                                 type="password"
                                 id="login-password"
                                 name="password"
-                                // value={this.state.password}
-                                // onChange={this.handleChange}
+                                value={this.state.password}
+                                onChange={this.handleChange}
                                 placeholder="Password"
                             />
                         </FormGroup>
-                        <Button color="danger" onClick={() => onSave()}>Log in</Button>
+                        <Button color="danger" onClick={() => onSave(this.state.email, this.state.password)}>Log in</Button>
                         {/* <Button color="secondary" onClick={toggle}>Cancel</Button> */}
                     </Form>
                 </ModalBody>
