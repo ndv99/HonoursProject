@@ -1,6 +1,6 @@
 import './App.css';
 import React, { Component } from "react";
-import JoinSessionForm from './components/join-session-form.js'
+import JoinSessionForm from './components/join-session-form'
 import CreateSessionForm from './components/create-session-form';
 // import useFetch from './hooks/useFetch';
 import axios from "axios";
