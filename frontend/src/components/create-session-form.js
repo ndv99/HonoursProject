@@ -53,6 +53,9 @@ class CreateSessionForm extends Component{
         // .then((res) => console.log(res))
         // .catch((err) => console.log(err));
 
+        axios.get("/api/f1auth")
+        .then((res) => console.log(res))
+
 
         const new_session = {join_code: 0, time_delay: 0}
 
@@ -65,8 +68,8 @@ class CreateSessionForm extends Component{
         const cookies = new Cookies();
         cookies.set('session_code', this.state.sessions_list[this.state.sessions_list.length-1].join_code, {path:'/'})
 
-        this.toggle();
-        this.setState({redirect: true})
+        // this.toggle();
+        // this.setState({redirect: true})
     }
 
     refresh_list = () => {

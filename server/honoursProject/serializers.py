@@ -5,3 +5,6 @@ class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Session
         fields = ('id', 'join_code', 'time_delay')
+
+class F1AuthSerializer(serializers.Serializer):
+    subscriptionToken = serializers.CharField()
