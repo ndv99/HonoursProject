@@ -84,6 +84,7 @@ class CreateSessionForm extends Component{
                 </>
             )
         } else {
+            this.setState({redirect: false})
             return(
                 <Navigate replace to="/dashboard"/>
             )
