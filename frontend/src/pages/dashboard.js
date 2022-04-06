@@ -24,6 +24,9 @@ export const Dashboard = () => {
         .then(console.log("Session deleted."))
         .catch((err) => console.log(err))
 
+        cookies.remove('session_code')
+        cookies.remove('entitlementToken')
+
         navigate('../', {replace: true})
     }
 
