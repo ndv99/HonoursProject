@@ -38,9 +38,13 @@ class CreateSessionForm extends Component{
     }
 
     handleSubmit(email, password) {
+        axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+        axios.defaults.xsrfCookieName = "csrftoken";
+
         const cookies = new Cookies();
         axios.post("/api/f1auth/", {Login: email, Password: password})
         .then((res) => cookies.set('entitlementToken', res.data.subscriptionToken))
+        .catch((err) => console.log(err))
 
         // cookies.set('entitlementToken', this.state.entitlementToken)
 
