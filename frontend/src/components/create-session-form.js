@@ -16,7 +16,8 @@ class CreateSessionForm extends Component{
             sessions_list: [],
             value: '',
             modal: false,
-            redirect: false
+            redirect: false,
+            entitlementtoken: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -37,8 +38,11 @@ class CreateSessionForm extends Component{
     }
 
     handleSubmit(email, password) {
+        const cookies = new Cookies();
         axios.post("/api/f1auth/", {Login: email, Password: password})
-        .then((res) => console.log(res))
+        .then((res) => cookies.set('entitlementToken', res.data.subscriptionToken))
+
+        // cookies.set('entitlementToken', this.state.entitlementToken)
 
 
         const new_session = {join_code: 0, time_delay: 0}
@@ -49,7 +53,6 @@ class CreateSessionForm extends Component{
 
         this.refresh_list()
         
-        const cookies = new Cookies();
         cookies.set('session_code', this.state.sessions_list[this.state.sessions_list.length-1].join_code, {path:'/'})
 
         this.toggle();

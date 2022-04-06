@@ -28,8 +28,8 @@ class F1AuthView(viewsets.ViewSet):
         }
 
         f1auth_response = requests.post(url=f1auth_url, headers=f1auth_headers, data=json.dumps(payload))
-        # print("F1's response:")
-        # print(f1auth_response.json())
+        print("F1's response:")
+        print(f1auth_response.json())
 
         subscriptionToken = json.loads(f1auth_response.content)["data"]["subscriptionToken"]
         response = {"subscriptionToken": subscriptionToken}
