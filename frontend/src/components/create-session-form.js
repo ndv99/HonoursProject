@@ -37,23 +37,6 @@ class CreateSessionForm extends Component{
     }
 
     handleSubmit(email, password) {
-        // console.log("login form submitted")
-        // console.log(`Recieved email ${email} and password ${password}`)
-
-        // const f1_auth_link = 'https://api.formula1.com/v2/account/subscriber/authenticate/by-password'
-        // const f1_auth_headers = {
-        //     'apiKey': 'fCUCjWrKPu9ylJwRAv8BpGLEgiAuThx7',
-        //     'User-Agent': 'RaceControl f1viewer'
-        // }
-        // const auth_body = {
-        //     'Login': email,
-        //     'Password': password
-        // }
-
-        // axios.post(f1_auth_link, auth_body, {headers: f1_auth_headers})
-        // .then((res) => console.log(res))
-        // .catch((err) => console.log(err));
-
         axios.post("/api/f1auth/", {Login: email, Password: password})
         .then((res) => console.log(res))
 
@@ -69,8 +52,8 @@ class CreateSessionForm extends Component{
         const cookies = new Cookies();
         cookies.set('session_code', this.state.sessions_list[this.state.sessions_list.length-1].join_code, {path:'/'})
 
-        // this.toggle();
-        // this.setState({redirect: true})
+        this.toggle();
+        this.setState({redirect: true})
     }
 
     refresh_list = () => {
