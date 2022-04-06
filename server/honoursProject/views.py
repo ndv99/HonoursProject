@@ -14,12 +14,9 @@ class SessionView(viewsets.ModelViewSet):
 
 class F1AuthView(viewsets.ViewSet):
 
-    def list(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
+        print(request.data)
         response = {"subscriptionToken": "This is a test. Hi there!!"}
         return_data = F1AuthSerializer(response).data
         return Response(return_data, status.HTTP_200_OK)
 
-# @api_view()
-# def f1auth_view(request):
-#     return_data = {"entitlementToken": "This is a test. Hi there!!"}
-#     return Response(status=200, data=return_data)

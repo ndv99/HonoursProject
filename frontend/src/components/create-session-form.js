@@ -6,7 +6,8 @@ import Cookies from 'universal-cookie'
 import axios from 'axios';
 import F1LoginModal from './../components/f1-login-modal';
 
-// axios.defaults.xsrfHeaderName = "X-CSRFToken";
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+axios.defaults.xsrfCookieName = "csrftoken";
 
 class CreateSessionForm extends Component{
     constructor(props) {
@@ -53,7 +54,7 @@ class CreateSessionForm extends Component{
         // .then((res) => console.log(res))
         // .catch((err) => console.log(err));
 
-        axios.get("/api/f1auth")
+        axios.post("/api/f1auth/", {Login: email, Password: password})
         .then((res) => console.log(res))
 
 
