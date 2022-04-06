@@ -6,6 +6,7 @@ import random
 class Session(models.Model):
     join_code = models.CharField(max_length=6)
     time_delay = models.IntegerField() # this is in seconds
+    ascendToken = models.CharField(max_length=512)
 
     def _str_(self):
         return self.join_code
