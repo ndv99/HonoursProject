@@ -7,11 +7,16 @@ function F1LoginModal (props) {
 
     const { toggle, onSave } = props;
 
+    const handleSubmit = (e) => {
+        onSave(email, password)
+        e.preventDefault();
+    }
+
     return(
         <Modal isOpen={true} toggle={toggle}>
             <ModalHeader toggle={toggle}>Enter your F1TV Pro login details</ModalHeader>
             <ModalBody>
-                <Form>
+                <Form onSubmit={(e) => handleSubmit(e)}>
                     <FormGroup>
                         <Label for="login-email">Email</Label>
                         <Input 
@@ -34,7 +39,7 @@ function F1LoginModal (props) {
                             placeholder="Password"
                         />
                     </FormGroup>
-                    <Button color="danger" onClick={() => onSave(email, password)}>Log in</Button>
+                    <Button type="submit" color="danger">Log in</Button>
                     {/* <Button color="secondary" onClick={toggle}>Cancel</Button> */}
                 </Form>
             </ModalBody>
