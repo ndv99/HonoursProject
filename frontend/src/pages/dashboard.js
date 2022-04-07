@@ -21,13 +21,14 @@ export const Dashboard = () => {
         const session_id = get_session_id(cookies.get('session_code'))
         console.log(session_id)
         axios.delete('/api/sessions/' + session_id + '/')
-        .then(console.log("Session deleted."))
-        .catch((err) => console.log(err))
+        .then((res) => {
+            console.log("Session deleted.")
+            cookies.remove('session_code')
+            cookies.remove('entitlementToken')
 
-        cookies.remove('session_code')
-        cookies.remove('entitlementToken')
-
-        navigate('../', {replace: true})
+            navigate('../', {replace: true})
+        })
+        .catch((err) => console.log(err));
     }
 
     function setSessionList(newlist){

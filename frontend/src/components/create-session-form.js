@@ -1,7 +1,7 @@
 import './../styles/components/search.css'
 import { Button } from 'reactstrap'
-import { Component } from 'react'
-import { Navigate } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Cookies from 'universal-cookie'
 import axios from 'axios';
 import F1LoginModal from './../components/f1-login-modal';
@@ -9,36 +9,20 @@ import F1LoginModal from './../components/f1-login-modal';
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 axios.defaults.xsrfCookieName = "csrftoken";
 
-class CreateSessionForm extends Component{
-    constructor(props) {
-        super(props);
-        this.state = {
-            modal: false,
-            redirect: false,
-        };
+function CreateSessionForm (){
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        // this.navigate = useNavigate();
-    }
+    const [modal, setModal] = useState(false);
+    const cookies = new Cookies();
+    const navigate = useNavigate();
 
-    toggle = () => {
-        this.setState({ modal: !this.state.modal });
+    const toggle = () => {
+        setModal(!modal)
     };
 
-    componentDidMount() {
-        this.refresh_list();
-    }
-
-    handleChange(event) {
-        this.setState({value: event.target.value});
-    }
-
-    handleSubmit(email, password) {
+    const handleSubmit = (email, password) => {
         axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         axios.defaults.xsrfCookieName = "csrftoken";
 
-        const cookies = new Cookies();
         // axios.post("/api/f1auth/", {Login: email, Password: password})
         // .then((res) => cookies.set('entitlementToken', res.data.subscriptionToken))
         // .catch((err) => console.log(err))
@@ -53,6 +37,7 @@ class CreateSessionForm extends Component{
         .then((res) => {
             cookies.set('session_code', res.data.join_code, {path:'/'})
             console.log("Session created successfully. Join code: " + res.data.join_code)
+            navigate('/dashboard/', {replace: true})
         })
         .catch((err) => console.log(err));
 
@@ -62,36 +47,19 @@ class CreateSessionForm extends Component{
         //         cookie_set = true;
         //     }
         // }
-        this.setState({redirect: true})
     }
 
-    refresh_list = () => {
-        axios 
-        .get("/api/sessions")
-        .then((res) => this.setState({ sessions_list: res.data }))
-        .catch((err) => console.log(err)); 
-    };
-
-    render(){
-        if (!this.state.redirect){
-            return(
-                <>
-                    <Button color="success" onClick={this.toggle}>Generate code</Button>
-                    {this.state.modal ? (
-                        <F1LoginModal
-                            toggle={this.toggle}
-                            onSave={this.handleSubmit}
-                        />
-                    ): null}
-                </>
-            )
-        } else {
-            // this.setState({redirect: false})
-            return(
-                <Navigate replace to="/dashboard"/>
-            )
-        }
-    }
+    return(
+        <>
+            <Button color="success" onClick={toggle}>Generate code</Button>
+            {modal ? (
+                <F1LoginModal
+                    toggle={toggle}
+                    onSave={handleSubmit}
+                />
+            ): null}
+        </>
+    )
 }
 
 export default CreateSessionForm;
