@@ -3,18 +3,24 @@ import random
 
 # Create your models here.
 
+def create_random_code():
+        while True:
+            code = random.randint(100000, 1000000)
+            if not Session.objects.filter(join_code=code).exists():
+                return "%d" % code
+
 class Session(models.Model):
-    join_code = models.CharField(max_length=6)
+    join_code = models.CharField(max_length=6, blank=True, default=create_random_code)
     time_delay = models.IntegerField() # this is in seconds
+    ascendToken = models.CharField(max_length=2048, blank=True)
 
     def _str_(self):
         return self.join_code
 
     def save(self, *args, **kwargs):
-        if self.join_code == 0 or self.join_code == "0":
-            code = random.randint(100000, 1000000)
-            self.set_join_code(code)
-            print("New session created")
+        code = create_random_code()
+        self.set_join_code(code)
+        print("New session created")
         return super().save(*args, **kwargs)
 
     def set_join_code(self, code):
