@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import status
+from rest_framework.settings import api_settings
 from .models import Session
 from .serializers import (SessionSerializer, F1AuthSerializer)
 import requests
@@ -11,6 +12,23 @@ import json
 class SessionView(viewsets.ModelViewSet):
     serializer_class = SessionSerializer
     queryset = Session.objects.all()
+
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(self, serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status.HTTP_200_OK, headers=headers)
+
+
+    # def perform_create(self, serializer):
+    #     serializer.save()
+    
+    # def get_success_headers(self, data):
+    #     try:
+    #         return {'Location': str(data[api_settings.URL_FIELD_NAME])}
+    #     except (TypeError, KeyError):
+    #         return {}
 
 class F1AuthView(viewsets.ViewSet):
 

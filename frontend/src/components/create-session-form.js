@@ -13,11 +13,8 @@ class CreateSessionForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            sessions_list: [],
-            value: '',
             modal: false,
             redirect: false,
-            entitlementtoken: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -42,24 +39,29 @@ class CreateSessionForm extends Component{
         axios.defaults.xsrfCookieName = "csrftoken";
 
         const cookies = new Cookies();
-        axios.post("/api/f1auth/", {Login: email, Password: password})
-        .then((res) => cookies.set('entitlementToken', res.data.subscriptionToken))
-        .catch((err) => console.log(err))
+        // axios.post("/api/f1auth/", {Login: email, Password: password})
+        // .then((res) => cookies.set('entitlementToken', res.data.subscriptionToken))
+        // .catch((err) => console.log(err))
 
         // cookies.set('entitlementToken', this.state.entitlementToken)
 
-
-        const new_session = {join_code: 0, time_delay: 0}
+        // this.setState({entitlementToken: cookies.get("entitlementToken")})
+        const new_session = {join_code: '', time_delay: 0, ascendToken: ''}
 
         axios
         .post("/api/sessions/", new_session)
-        .then((res) => console.log(res));
+        .then((res) => {
+            cookies.set('session_code', res.data.join_code, {path:'/'})
+            console.log("Session created successfully. Join code: " + res.data.join_code)
+        })
+        .catch((err) => console.log(err));
 
-        this.refresh_list()
-        
-        cookies.set('session_code', this.state.sessions_list[this.state.sessions_list.length-1].join_code, {path:'/'})
-
-        this.toggle();
+        // let cookie_set = false;
+        // while(!cookie_set){
+        //     if(cookies.get('session_code') !== undefined){
+        //         cookie_set = true;
+        //     }
+        // }
         this.setState({redirect: true})
     }
 
@@ -84,7 +86,7 @@ class CreateSessionForm extends Component{
                 </>
             )
         } else {
-            this.setState({redirect: false})
+            // this.setState({redirect: false})
             return(
                 <Navigate replace to="/dashboard"/>
             )

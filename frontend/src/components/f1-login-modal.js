@@ -50,7 +50,7 @@ class F1LoginModal extends Component{
                         {/* <Button color="secondary" onClick={toggle}>Cancel</Button> */}
                     </Form>
                 </ModalBody>
-                <ModalFooter toggle={toggle}>Your login details will not be stored.</ModalFooter>
+                <ModalFooter>Your login details will not be stored.</ModalFooter>
             </Modal>
         )
     }

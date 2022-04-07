@@ -4,7 +4,7 @@ from .models import Session
 class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Session
-        fields = ('id', 'join_code', 'time_delay', 'entitlementToken')
+        fields = ('id', 'join_code', 'time_delay', 'ascendToken')
 
 class F1AuthSerializer(serializers.Serializer):
     subscriptionToken = serializers.CharField()
