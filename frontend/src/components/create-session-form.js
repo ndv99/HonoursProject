@@ -37,16 +37,13 @@ function CreateSessionForm (){
         .then((res) => {
             cookies.set('session_code', res.data.join_code, {path:'/'})
             console.log("Session created successfully. Join code: " + res.data.join_code)
-            navigate('/dashboard/', {replace: true})
+            navigate_to_dashboard()
         })
         .catch((err) => console.log(err));
+    }
 
-        // let cookie_set = false;
-        // while(!cookie_set){
-        //     if(cookies.get('session_code') !== undefined){
-        //         cookie_set = true;
-        //     }
-        // }
+    const navigate_to_dashboard = () => {
+        navigate('/dashboard/', {replace: true})
     }
 
     return(

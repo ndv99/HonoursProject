@@ -23,7 +23,7 @@ class F1LoginModal extends Component{
             <Modal isOpen={true} toggle={toggle}>
                 <ModalHeader toggle={toggle}>Enter your F1TV Pro login details</ModalHeader>
                 <ModalBody>
-                    <Form onSubmit={() => onSave(this.state.email, this.state.password)}>
+                    <Form>
                         <FormGroup>
                             <Label for="login-email">Email</Label>
                             <Input 
@@ -46,7 +46,7 @@ class F1LoginModal extends Component{
                                 placeholder="Password"
                             />
                         </FormGroup>
-                        <Button type="submit" color="danger">Log in</Button>
+                        <Button color="danger" onClick={() => onSave(this.state.email, this.state.password)}>Log in</Button>
                         {/* <Button color="secondary" onClick={toggle}>Cancel</Button> */}
                     </Form>
                 </ModalBody>
