@@ -47,10 +47,15 @@ class F1AuthView(viewsets.ViewSet):
 
         f1auth_response = requests.post(url=f1auth_url, headers=f1auth_headers, data=json.dumps(payload))
         print("F1's response:")
-        print(f1auth_response.json())
+        print(f1auth_response.status_code)
 
-        subscriptionToken = json.loads(f1auth_response.content)["data"]["subscriptionToken"]
-        response = {"subscriptionToken": subscriptionToken}
-        return_data = F1AuthSerializer(response).data
-        return Response(return_data, status.HTTP_200_OK)
+        try:
+            subscriptionToken = json.loads(f1auth_response.content)["data"]["subscriptionToken"]
+            response = {"subscriptionToken": subscriptionToken}
+            return_data = F1AuthSerializer(response).data
+            return Response(return_data, status.HTTP_200_OK)
+        except json.decoder.JSONDecodeError:
+            response = {'errorReason': "F1 is currently rejecting requests since it thinks I am a bot."}
+            return Response(json.dumps(response), status.HTTP_503_SERVICE_UNAVAILABLE)
+        
 

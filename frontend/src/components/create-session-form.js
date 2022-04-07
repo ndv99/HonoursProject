@@ -23,14 +23,24 @@ function CreateSessionForm (){
         axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         axios.defaults.xsrfCookieName = "csrftoken";
 
-        // axios.post("/api/f1auth/", {Login: email, Password: password})
-        // .then((res) => cookies.set('entitlementToken', res.data.subscriptionToken))
-        // .catch((err) => console.log(err))
+        axios.post("/api/f1auth/", {Login: email, Password: password})
+        .then((res) => {
+            cookies.set('entitlementToken', res.data.subscriptionToken)
+            create_new_session(res.data.subscriptionToken);
+        })
+        .catch((err) => console.log(err))
 
         // cookies.set('entitlementToken', this.state.entitlementToken)
 
         // this.setState({entitlementToken: cookies.get("entitlementToken")})
-        const new_session = {join_code: '', time_delay: 0, ascendToken: ''}
+    }
+
+    const navigate_to_dashboard = () => {
+        navigate('/dashboard/', {replace: true})
+    }
+
+    const create_new_session = (subscriptionToken) => {
+        const new_session = {join_code: '', time_delay: 0, ascendToken: subscriptionToken}
 
         axios
         .post("/api/sessions/", new_session)
@@ -40,10 +50,6 @@ function CreateSessionForm (){
             navigate_to_dashboard()
         })
         .catch((err) => console.log(err));
-    }
-
-    const navigate_to_dashboard = () => {
-        navigate('/dashboard/', {replace: true})
     }
 
     return(
