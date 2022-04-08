@@ -1,3 +1,5 @@
+import { Col, Row, Container } from "reactstrap";
+import './../styles/components/telemetry.css'
 
 const TelemetryTable = () => {
 
@@ -34,9 +36,35 @@ const TelemetryTable = () => {
         },
     ]
 
+    // eventually drivers will be pulled directly from fastf1, for now though we'll just use this sample table
+    const drivers = sample_drivers
+
 
     return(
-        <h1>This is the telemetry table.</h1>
+        <Container>
+            <Row>
+                <Col>POS</Col>
+                <Col style={{width: "5px", flexGrow: 0}}/>
+                <Col>NAME</Col>
+                <Col>GAP</Col>
+                <Col>INT</Col>
+                <Col>LAP</Col>
+                <Col>TYRE</Col>
+            </Row>
+            {drivers.map((driver, i) => (
+                <Row key={i}>
+                    <Col>{i + 1}</Col>
+                    <Col style={{textAlign: "right", width: "5px", flexGrow: 0, paddingRight: 0}}>
+                        <div className="driverColor" style={{backgroundColor: `#${driver.Color}`}}/>
+                    </Col>
+                    <Col>{driver.Initials}</Col>
+                    <Col>gap</Col>
+                    <Col>interval</Col>
+                    <Col>laptime</Col>
+                    <Col>tyre</Col>
+                </Row>
+            ))}
+        </Container>
     )
 }
 

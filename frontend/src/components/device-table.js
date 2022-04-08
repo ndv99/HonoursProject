@@ -3,7 +3,7 @@ import { Row, Col, Container, Card, UncontrolledDropdown, DropdownMenu, Dropdown
 
 const DeviceTable = () => {
 
-        // for testing
+    // for testing
 
     const device_list = [
         {device_name:"Device 1", mode:0}, 
