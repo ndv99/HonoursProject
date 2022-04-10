@@ -2,6 +2,7 @@ import  { useState } from "react";
 import TelemetryTable from '../components/telemetry-table';
 import TwitterFeed from "../components/twitter-feed";
 import RedditFeed from '../components/reddit-feed';
+import axios from "axios";
 
 export const SecondScreen = () => {
 
@@ -9,6 +10,10 @@ export const SecondScreen = () => {
     const [reddit, setReddit] = useState(false)
     const [twitter, setTwitter] = useState(false)
     const [telemetry, setTelemetry] = useState(true)
+
+    axios.get("/api/telemetry/")
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err))
 
     return(
         <>

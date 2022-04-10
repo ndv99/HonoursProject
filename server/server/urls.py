@@ -21,6 +21,7 @@ from honoursProject import views
 router = routers.DefaultRouter()
 router.register(r'sessions', views.SessionView, 'session')
 router.register(r'f1auth', views.F1AuthView, 'f1auth')
+router.register(r'telemetry', views.TelemetryView, 'telemetry')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

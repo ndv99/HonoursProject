@@ -6,6 +6,7 @@ from .models import Session
 from .serializers import (SessionSerializer, F1AuthSerializer)
 import requests
 import json
+import fastf1
 
 # Create your views here.
 
@@ -59,3 +60,8 @@ class F1AuthView(viewsets.ViewSet):
             return Response(json.dumps(response), status.HTTP_503_SERVICE_UNAVAILABLE)
         
 
+class TelemetryView(viewsets.ViewSet):
+
+    def list(self, request, *args, **kwargs):
+        res = {'testResponse': "This is a test response. If you see this, it worked!"}
+        return Response(json.dumps(res), status.HTTP_200_OK)

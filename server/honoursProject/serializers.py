@@ -8,3 +8,6 @@ class SessionSerializer(serializers.ModelSerializer):
 
 class F1AuthSerializer(serializers.Serializer):
     subscriptionToken = serializers.CharField()
+
+class TelemetrySerializer:
+    f1Session = serializers.JSONField()
