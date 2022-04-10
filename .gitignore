@@ -194,4 +194,5 @@ pip-selfcheck.json
 # End of https://www.toptal.com/developers/gitignore/api/django,react,venv
 
 server/server/fastf1cache
-server/output.txt
+server/output.*
+server/testing-fast1.py
