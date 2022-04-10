@@ -193,4 +193,4 @@ pip-selfcheck.json
 
 # End of https://www.toptal.com/developers/gitignore/api/django,react,venv
 
-server/honoursProject/server/fastf1cache
+server/server/fastf1cache
