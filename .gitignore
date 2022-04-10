@@ -195,4 +195,4 @@ pip-selfcheck.json
 
 server/server/fastf1cache
 server/output.*
-server/testing-fast1.py
+server/testing-fastf1.py
