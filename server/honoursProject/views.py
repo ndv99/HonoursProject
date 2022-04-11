@@ -1,3 +1,4 @@
+from msilib.schema import Error
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import status
@@ -63,5 +64,15 @@ class F1AuthView(viewsets.ViewSet):
 class TelemetryView(viewsets.ViewSet):
 
     def list(self, request, *args, **kwargs):
-        res = {'testResponse': "This is a test response. If you see this, it worked!"}
-        return Response(json.dumps(res), status.HTTP_200_OK)
+
+        headers = request.headers
+        fastf1.Cache.enable_cache("fastf1cache")
+        try:
+            # session = fastf1.get_session(headers['year'], headers['gp'], headers['identifier'])
+            # session.load(laps=True)
+
+            res = {'testResponse': "This is a test response. If you see this, it worked!"}
+            return Response(json.dumps(res), status.HTTP_200_OK)
+        except KeyError:
+            res = {'errorMessage': "The headers were provided with incorrect keys, or not at all."}
+            return Response(json.dumps(res), status.HTTP_400_BAD_REQUEST)
