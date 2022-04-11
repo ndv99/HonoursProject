@@ -11,9 +11,9 @@ export const SecondScreen = () => {
     const [twitter, setTwitter] = useState(false)
     const [telemetry, setTelemetry] = useState(true)
 
-    axios.get("/api/telemetry/")
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err))
+    // axios.get("/api/telemetry/")
+    // .then((res) => console.log(res))
+    // .catch((err) => console.log(err))
 
     return(
         <>
