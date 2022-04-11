@@ -11,3 +11,6 @@ class F1AuthSerializer(serializers.Serializer):
 
 class TelemetrySerializer:
     f1Session = serializers.JSONField()
+
+class F1VideoSerializer:
+    playback_url = serializers.CharField()
