@@ -58,7 +58,7 @@ class F1AuthView(viewsets.ViewSet):
             return Response(return_data, status.HTTP_200_OK)
         except json.decoder.JSONDecodeError:
             response = {'errorReason': "F1 is currently rejecting requests since it thinks I am a bot."}
-            return Response(json.dumps(response), status.HTTP_503_SERVICE_UNAVAILABLE)
+            return Response(response, status.HTTP_503_SERVICE_UNAVAILABLE)
         
 
 class TelemetryView(viewsets.ViewSet):
@@ -66,16 +66,36 @@ class TelemetryView(viewsets.ViewSet):
     def list(self, request, *args, **kwargs):
 
         headers = request.headers
-        fastf1.Cache.enable_cache("fastf1cache")
+        fastf1.Cache.enable_cache("server/fastf1cache")
         try:
-            # session = fastf1.get_session(headers['year'], headers['gp'], headers['identifier'])
-            # session.load(laps=True)
+            session = fastf1.get_session(int(headers['year']), headers['gp'], headers['identifier'])
+            session.load(laps=True)
 
-            res = {'testResponse': "This is a test response. If you see this, it worked!"}
-            return Response(json.dumps(res), status.HTTP_200_OK)
+            telemetry = {}
+            drivers = {}
+            for driver in session.drivers:
+                print(f"Getting data for driver {driver}.")
+                t = session.laps.pick_driver(driver)
+                print(f"Converting to dict...\n")
+                telemetry[driver] = t.to_json()
+                print(f"Parsing information for driver{driver}...")
+                drivers[str(driver)] = session.get_driver(driver).to_json()
+
+            for driver in drivers:
+                drivers[driver] = json.loads(drivers[driver])
+
+            for t in telemetry:
+                telemetry[t] = json.loads(telemetry[t])
+
+            data={
+                "drivers": drivers,
+                "telemetry": telemetry
+            }
+
+            return Response(data, status.HTTP_200_OK)
         except KeyError:
             res = {'errorMessage': "The headers were provided with incorrect keys, or not at all."}
-            return Response(json.dumps(res), status.HTTP_400_BAD_REQUEST)
+            return Response(res, status.HTTP_400_BAD_REQUEST)
 
 class F1VideoView(viewsets.ViewSet):
 
@@ -94,7 +114,7 @@ class F1VideoView(viewsets.ViewSet):
             # print(f"Content ID: {contentid}")
         except KeyError:
             res = {'err': 'The headers were provided with incorrect keys, or not at all'}
-            return Response(json.dumps(res), status.HTTP_400_BAD_REQUEST)
+            return Response(res, status.HTTP_400_BAD_REQUEST)
 
         f1_response = requests.get(url=(f'{f1vid_url}{contentid}'), headers=f1vid_headers)
 
@@ -113,6 +133,7 @@ class F1VideoView(viewsets.ViewSet):
             return Response(playback_url, status.HTTP_200_OK)
         elif rescode == 401:
             res = {'err': "Your entitlement token is incorrect, or has expired."}
-            return Response(json.dumps(res), status.HTTP_401_UNAUTHORIZED)
+            return Response(res, status.HTTP_401_UNAUTHORIZED)
         elif rescode == 400:
             res = {'err': f'A session with code  {contentid} does not exist.'}
+            return Response(res, status.HTTP_400_BAD_REQUEST)

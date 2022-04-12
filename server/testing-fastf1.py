@@ -6,19 +6,26 @@ session = fastf1.get_session(2019, "Italy Grand Prix", "R")
 session.load(laps=True)
 
 telemetry = {}
+drivers = {}
 for driver in session.drivers:
-    print(f"Getting data for driver {driver}")
-    t = session.laps.pick_driver(driver).get_telemetry()
+    print(f"Getting data for driver {driver}.")
+    t = session.laps.pick_driver(driver)
     print(f"Converting to dict...\n")
-    telemetry[driver] = t.to_dict()
+    telemetry[driver] = t.to_json()
+    print(f"Parsing information for driver{driver}...")
+    drivers[str(driver)] = session.get_driver(driver).to_json()
 
-print("Dumping all data to JSON...")
-telemetry_json = json.dumps(telemetry, default=str)
+for driver in drivers:
+    drivers[driver] = json.loads(drivers[driver])
 
-# telemetry = session.laps.pick_driver("LEC").get_telemetry()
-# telemetry_json = telemetry.to_json()
+for t in telemetry:
+    telemetry[t] = json.loads(telemetry[t])
+
+data={
+    "drivers": drivers,
+    "telemetry": telemetry
+}
 
 with open("output.json", 'w') as file:
-    file.write(telemetry_json)
-
+    file.write(json.dumps(data, default=str))
 print("\nDone!")
