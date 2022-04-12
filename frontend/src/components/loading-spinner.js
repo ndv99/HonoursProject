@@ -1,10 +1,12 @@
 import React from "react";
-import "./spinner.css";
+import "./../styles/components/spinner.css";
 
-export default function LoadingSpinner() {
+const LoadingSpinner = () => {
   return (
     <div className="spinner-container">
       <div className="loading-spinner"></div>
     </div>
   );
 }
+
+export default LoadingSpinner;
