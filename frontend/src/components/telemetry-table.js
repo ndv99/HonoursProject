@@ -55,7 +55,7 @@ const TelemetryTable = () => {
                 'identifier': 'r'
             }})
         .then((res) => {
-            setDrivers(Object.values(res.data.drivers))
+            setDrivers(Object.values(res.data.drivers).sort((a, b) => (a.GridPosition > b.GridPosition) ? 1 : -1))
             setTelemetry(Object.values(res.data.telemetry))
             // console.log(res.data)
             // console.log(drivers)
