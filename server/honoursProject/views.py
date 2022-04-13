@@ -1,3 +1,4 @@
+from msilib.schema import Error
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import status
@@ -6,6 +7,7 @@ from .models import Session
 from .serializers import (SessionSerializer, F1AuthSerializer)
 import requests
 import json
+import fastf1
 
 # Create your views here.
 
@@ -56,6 +58,82 @@ class F1AuthView(viewsets.ViewSet):
             return Response(return_data, status.HTTP_200_OK)
         except json.decoder.JSONDecodeError:
             response = {'errorReason': "F1 is currently rejecting requests since it thinks I am a bot."}
-            return Response(json.dumps(response), status.HTTP_503_SERVICE_UNAVAILABLE)
+            return Response(response, status.HTTP_503_SERVICE_UNAVAILABLE)
         
 
+class TelemetryView(viewsets.ViewSet):
+
+    def list(self, request, *args, **kwargs):
+
+        headers = request.headers
+        fastf1.Cache.enable_cache("server/fastf1cache")
+        try:
+            session = fastf1.get_session(int(headers['year']), headers['gp'], headers['identifier'])
+            session.load(laps=True)
+
+            telemetry = {}
+            drivers = {}
+            for driver in session.drivers:
+                print(f"Getting data for driver {driver}.")
+                t = session.laps.pick_driver(driver)
+                print(f"Converting to dict...\n")
+                telemetry[driver] = t.to_json()
+                print(f"Parsing information for driver{driver}...")
+                drivers[str(driver)] = session.get_driver(driver).to_json()
+
+            for driver in drivers:
+                drivers[driver] = json.loads(drivers[driver])
+
+            for t in telemetry:
+                telemetry[t] = json.loads(telemetry[t])
+
+            data={
+                "drivers": drivers,
+                "telemetry": telemetry
+            }
+
+            return Response(data, status.HTTP_200_OK)
+        except KeyError:
+            res = {'errorMessage': "The headers were provided with incorrect keys, or not at all."}
+            return Response(res, status.HTTP_400_BAD_REQUEST)
+
+class F1VideoView(viewsets.ViewSet):
+
+    def list(self, request, *args, **kwargs):
+
+        headers = request.headers
+        f1vid_url = "https://f1tv.formula1.com/1.0/R/ENG/BIG_SCREEN_HLS/ALL/CONTENT/PLAY?contentId="
+
+        try:
+            f1vid_headers = { 
+                "ascendontoken": headers["ascendontoken"], 
+                "User-Agent": "RaceControl f1viewer",
+                }
+            contentid = headers["contentid"]
+            # print(f'Ascendon Token: {headers["ascendontoken"]}')
+            # print(f"Content ID: {contentid}")
+        except KeyError:
+            res = {'err': 'The headers were provided with incorrect keys, or not at all'}
+            return Response(res, status.HTTP_400_BAD_REQUEST)
+
+        f1_response = requests.get(url=(f'{f1vid_url}{contentid}'), headers=f1vid_headers)
+
+        # if f1_response.status_code
+        print("F1's response:")
+        print(f1_response.status_code)
+        # print(type(f1_response.status_code))
+        # print()
+        # print(f1_response.content)
+
+        rescode = f1_response.status_code
+
+        if rescode == 200:
+            playback_url = json.loads(f1_response.content)['resultObj']['url']
+            res = {'url': playback_url}
+            return Response(playback_url, status.HTTP_200_OK)
+        elif rescode == 401:
+            res = {'err': "Your entitlement token is incorrect, or has expired."}
+            return Response(res, status.HTTP_401_UNAUTHORIZED)
+        elif rescode == 400:
+            res = {'err': f'A session with code  {contentid} does not exist.'}
+            return Response(res, status.HTTP_400_BAD_REQUEST)

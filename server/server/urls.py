@@ -21,9 +21,10 @@ from honoursProject import views
 router = routers.DefaultRouter()
 router.register(r'sessions', views.SessionView, 'session')
 router.register(r'f1auth', views.F1AuthView, 'f1auth')
+router.register(r'telemetry', views.TelemetryView, 'telemetry')
+router.register(r'f1video', views.F1VideoView, 'f1video')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    # path(r'api/f1auth/', views.F1AuthView.as_view(), name="f1auth")
 ]
