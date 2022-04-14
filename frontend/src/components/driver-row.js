@@ -5,19 +5,14 @@ function DriverRow (props) {
 
     const [driver, setDriver] = useState(props.driver)
     const [telemetry, setTelemetry] = useState(props.telemetry[parseInt(driver.DriverNumber)])
-    const [lap, setLap] = useState(1)
-    const counter = useRef(0)
+    const lap = props.lap
+    
 
     // console.log(props.telemetry[parseInt(driver.DriverNumber)])
 
-    useEffect(() => {
-        if (counter.current < 40) {
-            counter.current += 1;
-            const timer = setTimeout(() => setLap(lap + 1), 1000)
-
-            return () => clearTimeout(timer);
-        }
-    }, [lap])
+    // useEffect(() => {
+        
+    // }, [lap])
 
     const convertMillisToLaptime = (millis) => {
         var time = new Date(millis)

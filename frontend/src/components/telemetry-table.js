@@ -1,5 +1,5 @@
 import { Col, Row, Container } from "reactstrap";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import LoadingSpinner from './loading-spinner.js';
 import DriverRow from './driver-row.js';
@@ -11,6 +11,8 @@ const TelemetryTable = () => {
     const [telemetry, setTelemetry] = useState()
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState("")
+    const [counter, setCounter] = useState(0)
+    const [lap, setLap] = useState(0)
 
     const track_status_data = {
         "1": "Green flag",
@@ -39,7 +41,7 @@ const TelemetryTable = () => {
 
             calcMissingTimes()
 
-            console.log(telemetry)
+            // console.log(telemetry)
 
             setLoading(false)
         })
@@ -48,6 +50,59 @@ const TelemetryTable = () => {
             setLoading(false)
         })
     }, [])
+
+    useEffect(() =>{
+        console.log("Current lap: " + lap)
+        // console.log("Current counter: " + counter)
+        if (lap < 40) {
+            const timer = setTimeout(() => setCounter(counter + 1), 1000)
+            
+            if (isLoading === false){
+                if (lap > 0) {
+                    // sortDriversByLapStartTimes()
+
+                    // var driversWithTimes = {}
+                    for (var d in drivers){
+                        let driver = drivers[d]
+                        let driverNum = parseInt(driver.DriverNumber)
+                        let driverLap = getKeyByValue(telemetry[driverNum].LapNumber, lap)
+                        let lapStart = telemetry[driverNum].LapStartTime[driverLap]
+                        driver.CurrentLapStart = lapStart
+
+                        // driversWithTimes[lapStart] = driverNum
+                    }
+                    sortDriversByLapStartTimes()
+                    // drivers.sort((a, b) => a.CurrentLapStart - b.CurrentLapStart)
+                    // console.log(driversWithTimes)
+                }
+                for (var d in drivers){
+                    console.log(d)
+                    let driver = drivers[d]
+                    console.log(`Driver ${driver.DriverNumber} lap start time on lap ${lap}: ${driver.CurrentLapStart}`)
+                }
+                console.log(drivers)
+
+                setLap(lap + 1);
+            }
+
+            return () => clearTimeout(timer);
+        }
+    }, [counter])
+
+    function getKeyByValue(object, value) {
+        return Object.keys(object).find(key => object[key] === value);
+      }      
+
+    const sortDriversByLapStartTimes = () => {
+        setDrivers(drivers => drivers.sort((a, b) => {
+            // console.log(a)
+            if (a.CurrentLapStart > b.CurrentLapStart) {
+                return 1
+            } else {
+                return -1
+            }
+        }))
+    }
 
     const calcMissingTimes = () => {
         for (const driver in telemetry){
@@ -117,7 +172,7 @@ const TelemetryTable = () => {
                 {drivers.map((driver, i) => (
                     <Row key={i}>
                         <Col>{i + 1}</Col>
-                        <DriverRow driver={driver} telemetry={telemetry}/>
+                        <DriverRow driver={driver} telemetry={telemetry} lap={lap} setLap={setLap}/>
                     </Row>
                     
                 ))}
