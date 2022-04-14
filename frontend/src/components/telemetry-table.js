@@ -165,7 +165,7 @@ const TelemetryTable = () => {
                     <Col>TYRE</Col>
                 </Row>
                 {drivers.map((driver, i) => (
-                    <Row key={i}>
+                    <Row key={driver.DriverNumber}>
                         <Col>{i + 1}</Col>
                         <DriverRow driver={driver} telemetry={telemetry} lap={lap} setLap={setLap}/>
                     </Row>
