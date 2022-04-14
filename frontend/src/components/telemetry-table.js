@@ -36,6 +36,11 @@ const TelemetryTable = () => {
 
             setDrivers(driverlist)
             setTelemetry(telemetry => (res.data.telemetry))
+
+            calcMissingTimes()
+
+            console.log(telemetry)
+
             setLoading(false)
         })
         .catch((err) => {
@@ -43,6 +48,23 @@ const TelemetryTable = () => {
             setLoading(false)
         })
     }, [])
+
+    const calcMissingTimes = () => {
+        for (const driver in telemetry){
+            const lap1starttime = telemetry[driver].LapStartTime[Object.keys(telemetry[driver].LapStartTime)[0]]
+            const lap2starttime = telemetry[driver].LapStartTime[Object.keys(telemetry[driver].LapStartTime)[1]]
+
+            const laptime = lap2starttime - lap1starttime
+
+            const s2time = telemetry[driver].Sector2Time[Object.keys(telemetry[driver].Sector2Time)[0]]
+            const s3time = telemetry[driver].Sector3Time[Object.keys(telemetry[driver].Sector3Time)[0]]
+            const s1time = laptime - s2time - s3time
+
+            telemetry[driver].LapTime[Object.keys(telemetry[driver].LapTime)[0]] = laptime
+            telemetry[driver].Sector1Time[Object.keys(telemetry[driver].Sector1Time)[0]] = s1time
+            telemetry[driver].Sector1SessionTime[Object.keys(telemetry[driver].Sector1SessionTime)[0]] = lap1starttime + s1time
+        }
+    }
 
     const sortDriversByGridPos = (a, b) => {
         if (a.GridPosition > b.GridPosition){
