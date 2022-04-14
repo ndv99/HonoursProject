@@ -86,6 +86,9 @@ const TelemetryTable = () => {
                     <Col>NAME</Col>
                     <Col>GAP</Col>
                     <Col>INT</Col>
+                    <Col>S1</Col>
+                    <Col>S2</Col>
+                    <Col>S3</Col>
                     <Col>LAP</Col>
                     <Col>TYRE</Col>
                 </Row>
