@@ -52,35 +52,30 @@ const TelemetryTable = () => {
     }, [])
 
     useEffect(() =>{
-        console.log("Current lap: " + lap)
+        // console.log("Current lap: " + lap)
         // console.log("Current counter: " + counter)
         if (lap < 40) {
             const timer = setTimeout(() => setCounter(counter + 1), 1000)
             
             if (isLoading === false){
                 if (lap > 0) {
-                    // sortDriversByLapStartTimes()
-
-                    // var driversWithTimes = {}
                     for (var d in drivers){
                         let driver = drivers[d]
                         let driverNum = parseInt(driver.DriverNumber)
                         let driverLap = getKeyByValue(telemetry[driverNum].LapNumber, lap)
                         let lapStart = telemetry[driverNum].LapStartTime[driverLap]
                         driver.CurrentLapStart = lapStart
-
-                        // driversWithTimes[lapStart] = driverNum
+                        // driver.kekw = lap
                     }
                     sortDriversByLapStartTimes()
-                    // drivers.sort((a, b) => a.CurrentLapStart - b.CurrentLapStart)
-                    // console.log(driversWithTimes)
                 }
-                for (var d in drivers){
-                    console.log(d)
-                    let driver = drivers[d]
-                    console.log(`Driver ${driver.DriverNumber} lap start time on lap ${lap}: ${driver.CurrentLapStart}`)
-                }
-                console.log(drivers)
+                // for (var d in drivers){
+                //     let driver = drivers[d]
+                //     console.log(`Driver ${driver.DriverNumber} lap start time on lap ${lap}: ${driver.CurrentLapStart}`)
+                // }
+                // let kekw = [...drivers]
+                // console.log(kekw)
+                // console.log(drivers, lap)
 
                 setLap(lap + 1);
             }
