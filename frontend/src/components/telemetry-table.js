@@ -2,47 +2,25 @@ import { Col, Row, Container } from "reactstrap";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import LoadingSpinner from './loading-spinner.js';
+import DriverRow from './driver-row';
 import './../styles/components/telemetry.css';
-
-// const sample_drivers = [
-    //     {
-    //         Name: "LECLERC",
-    //         Initials: "LEC",
-    //         FullName: "C. LECLERC",
-    //         FirstName: "Charles",
-    //         LastName: "Leclerc",
-    //         Color: "ed1c24",
-    //         Team: "Ferrari",
-    //         Num: "16"
-    //     },
-    //     {
-    //         Name: "VERSTAPPEN",
-    //         Initials: "VER",
-    //         FullName: "M.VERSTAPPEN",
-    //         FirstName: "Max",
-    //         LastName: "Verstappen",
-    //         Color: "1e5bc6",
-    //         Team: "Red Bull Racing",
-    //         Num: "1"
-    //     },
-    //     {
-    //         Name: "RUSSELL",
-    //         Initials: "RUS",
-    //         FullName: "G.RUSSELL",
-    //         FirstName: "George",
-    //         LastName: "Russell",
-    //         Color: "6cd3bf",
-    //         Team: "Mercedes",
-    //         Num: "63"
-    //     },
-    // ]
 
 const TelemetryTable = () => {
 
     const [drivers, setDrivers] = useState([])
-    const [telemetry, setTelemetry] = useState([])
+    const [telemetry, setTelemetry] = useState()
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState("")
+
+    const track_status_data = {
+        "1": "Green flag",
+        "2": "Yellow flag",
+        "3": "",
+        "4": "Safety Car",
+        "5": "Red Flag",
+        "6": "Virtual Safety Car",
+        "7": "Virtual Safety Car Ending"
+    }
 
     // console.log("isLoading: " + isLoading)
 
@@ -55,12 +33,14 @@ const TelemetryTable = () => {
                 'identifier': 'r'
             }})
         .then((res) => {
-            setDrivers(Object.values(res.data.drivers).sort((a, b) => (a.GridPosition > b.GridPosition) ? 1 : -1))
-            setTelemetry(Object.values(res.data.telemetry))
-            // console.log(res.data)
-            // console.log(drivers)
+            let driverlist = Object.values(res.data.drivers).sort((a, b) => (sortDriversByGridPos(a,b)))
+            driverlist = movePLStartersToBack(driverlist)
+
+            setDrivers(driverlist)
+            setTelemetry(telemetry => (res.data.telemetry))
             setLoading(false)
-            // console.log(data)
+
+            console.log(telemetry)
         })
         .catch((err) => {
             setError(err)
@@ -68,6 +48,31 @@ const TelemetryTable = () => {
         })
         // setLoading(false)
     }, [])
+
+    const sortDriversByGridPos = (a, b) => {
+        if (a.GridPosition > b.GridPosition){
+            return 1
+        } else {
+            return -1
+        }
+    }
+
+    const movePLStartersToBack = (driverlist) => {
+        let incorrectOrder = true;
+        while (incorrectOrder){
+            let pole = driverlist[0]
+            // console.log(pole)
+            if (pole.GridPosition === 0){
+                let lastplacepos = driverlist[driverlist.length - 1].GridPosition
+                pole.GridPosition = lastplacepos + 1
+                driverlist.push(driverlist.splice(0, 1)[0])
+            } else {
+                incorrectOrder = false;
+            }
+        }
+
+        return driverlist
+    }
 
 
     if (isLoading){
@@ -85,7 +90,7 @@ const TelemetryTable = () => {
             <Container>
                 <Row>
                     <Col>POS</Col>
-                    <Col style={{width: "5px", flexGrow: 0}}/>
+                    <Col style={{width: "5px", flexGrow: 0, paddingRight: 0}}/>
                     <Col>NAME</Col>
                     <Col>GAP</Col>
                     <Col>INT</Col>
@@ -95,15 +100,9 @@ const TelemetryTable = () => {
                 {drivers.map((driver, i) => (
                     <Row key={i}>
                         <Col>{i + 1}</Col>
-                        <Col style={{textAlign: "right", width: "5px", flexGrow: 0, paddingRight: 0}}>
-                            <div className="driverColor" style={{backgroundColor: `#${driver.TeamColor}`}}/>
-                        </Col>
-                        <Col>{driver.Abbreviation}</Col>
-                        <Col>gap</Col>
-                        <Col>interval</Col>
-                        <Col>laptime</Col>
-                        <Col>tyre</Col>
+                        <DriverRow driver={driver}/>
                     </Row>
+                    
                 ))}
             </Container>
         )
