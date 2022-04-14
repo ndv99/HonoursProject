@@ -6,13 +6,8 @@ function DriverRow (props) {
     const [driver, setDriver] = useState(props.driver)
     const [telemetry, setTelemetry] = useState(props.telemetry[parseInt(driver.DriverNumber)])
     const lap = props.lap
-    
-
-    // console.log(props.telemetry[parseInt(driver.DriverNumber)])
-
-    // useEffect(() => {
-        
-    // }, [lap])
+    const gap = props.gap
+    const interval = props.interval
 
     const convertMillisToLaptime = (millis) => {
         var time = new Date(millis)
@@ -42,8 +37,8 @@ function DriverRow (props) {
                 <div className="driverColor" style={{backgroundColor: `#${driver.TeamColor}`}}/>
             </Col>
             <Col>{driver.Abbreviation}</Col>
-            <Col>gap</Col>
-            <Col>interval</Col>
+            <Col>{convertMillisToSectorTime(gap)}</Col>
+            <Col>{convertMillisToSectorTime(interval)}</Col>
             <Col>{convertMillisToSectorTime(telemetry.Sector1Time[Object.keys(telemetry.Sector1Time)[lap]])}</Col>
             <Col>{convertMillisToSectorTime(telemetry.Sector2Time[Object.keys(telemetry.Sector2Time)[lap]])}</Col>
             <Col>{convertMillisToSectorTime(telemetry.Sector3Time[Object.keys(telemetry.Sector3Time)[lap]])}</Col>

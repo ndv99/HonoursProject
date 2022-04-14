@@ -140,6 +140,14 @@ const TelemetryTable = () => {
         return driverlist
     }
 
+    const calculateInterval = (driver, i) => {
+        try{
+            return driver.CurrentLapStart - drivers[i-1].CurrentLapStart
+        } catch(err) {
+            return 0
+        } 
+    }
+
 
     if (isLoading){
         return(
@@ -167,7 +175,7 @@ const TelemetryTable = () => {
                 {drivers.map((driver, i) => (
                     <Row key={driver.DriverNumber}>
                         <Col>{i + 1}</Col>
-                        <DriverRow driver={driver} telemetry={telemetry} lap={lap} setLap={setLap}/>
+                        <DriverRow driver={driver} telemetry={telemetry} lap={lap} gap={driver.CurrentLapStart - drivers[0].CurrentLapStart} interval={calculateInterval(driver, i)}/>
                     </Row>
                     
                 ))}
