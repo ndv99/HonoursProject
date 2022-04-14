@@ -2,7 +2,7 @@ import { Col, Row, Container } from "reactstrap";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import LoadingSpinner from './loading-spinner.js';
-import DriverRow from './driver-row';
+import DriverRow from './driver-row.js';
 import './../styles/components/telemetry.css';
 
 const TelemetryTable = () => {
@@ -22,8 +22,6 @@ const TelemetryTable = () => {
         "7": "Virtual Safety Car Ending"
     }
 
-    // console.log("isLoading: " + isLoading)
-
     useEffect(() => {
         axios.get(
             "/api/telemetry/",
@@ -39,14 +37,11 @@ const TelemetryTable = () => {
             setDrivers(driverlist)
             setTelemetry(telemetry => (res.data.telemetry))
             setLoading(false)
-
-            console.log(telemetry)
         })
         .catch((err) => {
             setError(err)
             setLoading(false)
         })
-        // setLoading(false)
     }, [])
 
     const sortDriversByGridPos = (a, b) => {
@@ -61,7 +56,6 @@ const TelemetryTable = () => {
         let incorrectOrder = true;
         while (incorrectOrder){
             let pole = driverlist[0]
-            // console.log(pole)
             if (pole.GridPosition === 0){
                 let lastplacepos = driverlist[driverlist.length - 1].GridPosition
                 pole.GridPosition = lastplacepos + 1
@@ -76,7 +70,6 @@ const TelemetryTable = () => {
 
 
     if (isLoading){
-        // console.log("isLoading is true.")
         return(
             <LoadingSpinner />
         )
@@ -85,7 +78,6 @@ const TelemetryTable = () => {
             <div>{error}</div>
         )
     } else { 
-        // console.log("React thinks isLoading is false. Actual state: " + isLoading)
         return(
             <Container>
                 <Row>
@@ -100,7 +92,7 @@ const TelemetryTable = () => {
                 {drivers.map((driver, i) => (
                     <Row key={i}>
                         <Col>{i + 1}</Col>
-                        <DriverRow driver={driver}/>
+                        <DriverRow driver={driver} telemetry={telemetry}/>
                     </Row>
                     
                 ))}

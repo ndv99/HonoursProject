@@ -13,9 +13,9 @@ export const SecondScreen = () => {
     return(
         <div>
             <h1>This is the second screen page.</h1>
-            <TelemetryTable />
-            <TwitterFeed />
-            <RedditFeed />
+            {telemetry ? <TelemetryTable /> : <></>}
+            {twitter ? <TwitterFeed /> : <></>}
+            {reddit ? <RedditFeed /> : <></>}
         </div>
     )
 }
