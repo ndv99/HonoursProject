@@ -9,6 +9,12 @@ function DriverRow (props) {
     const gap = props.gap
     const interval = props.interval
 
+    const tyreColour = {
+        "SOFT": "red",
+        "MEDIUM": "yellow",
+        "HARD": "black"
+    }
+
     const convertMillisToLaptime = (millis) => {
         var time = new Date(millis)
         var min = time.getMinutes().toString()
@@ -43,7 +49,7 @@ function DriverRow (props) {
             <Col>{convertMillisToSectorTime(telemetry.Sector2Time[Object.keys(telemetry.Sector2Time)[lap]])}</Col>
             <Col>{convertMillisToSectorTime(telemetry.Sector3Time[Object.keys(telemetry.Sector3Time)[lap]])}</Col>
             <Col>{convertMillisToLaptime(telemetry.LapTime[Object.keys(telemetry.LapTime)[lap]])}</Col>
-            <Col>{telemetry.Compound[Object.keys(telemetry.Compound)[lap]]}</Col>
+            <Col style={{color: telemetry.Compound[Object.keys(telemetry.Compound)[lap]] === "SOFT" ? "red" : telemetry.Compound[Object.keys(telemetry.Compound)[lap]] === "MEDIUM" ?  "yellow" : "black"}}>{telemetry.Compound[Object.keys(telemetry.Compound)[lap]]}</Col>
         </>
     )
 }
