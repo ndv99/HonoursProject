@@ -9,11 +9,9 @@ function DriverRow (props) {
     const gap = props.gap
     const interval = props.interval
 
-    const tyreColour = {
-        "SOFT": "red",
-        "MEDIUM": "yellow",
-        "HARD": "black"
-    }
+    function getKeyByValue(object, value) {
+        return Object.keys(object).find(key => object[key] === value);
+    }      
 
     const convertMillisToLaptime = (millis) => {
         var time = new Date(millis)
@@ -48,7 +46,7 @@ function DriverRow (props) {
             <Col>{convertMillisToSectorTime(telemetry.Sector1Time[Object.keys(telemetry.Sector1Time)[lap]])}</Col>
             <Col>{convertMillisToSectorTime(telemetry.Sector2Time[Object.keys(telemetry.Sector2Time)[lap]])}</Col>
             <Col>{convertMillisToSectorTime(telemetry.Sector3Time[Object.keys(telemetry.Sector3Time)[lap]])}</Col>
-            <Col>{convertMillisToLaptime(telemetry.LapTime[Object.keys(telemetry.LapTime)[lap]])}</Col>
+            <Col style={{color: telemetry.IsPersonalBest[getKeyByValue(telemetry.LapNumber, lap)] ? "lime" : "black"}}>{convertMillisToLaptime(telemetry.LapTime[Object.keys(telemetry.LapTime)[lap]])}</Col>
             <Col style={{color: telemetry.Compound[Object.keys(telemetry.Compound)[lap]] === "SOFT" ? "red" : telemetry.Compound[Object.keys(telemetry.Compound)[lap]] === "MEDIUM" ?  "yellow" : "black"}}>{telemetry.Compound[Object.keys(telemetry.Compound)[lap]]}</Col>
         </>
     )

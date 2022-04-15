@@ -74,7 +74,7 @@ const TelemetryTable = () => {
 
     function getKeyByValue(object, value) {
         return Object.keys(object).find(key => object[key] === value);
-      }      
+    }      
 
     const sortDriversByLapStartTimes = () => {
         setDrivers(drivers => drivers.sort((a, b) => {
