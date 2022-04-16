@@ -76,7 +76,7 @@ class TelemetryView(viewsets.ViewSet):
             for driver in session.drivers:
                 print(f"Getting data for driver {driver}.")
                 t = session.laps.pick_driver(driver)
-                print(f"Converting to dict...\n")
+                print(f"Converting to JSON...\n")
                 telemetry[driver] = t.to_json()
                 print(f"Parsing information for driver{driver}...")
                 drivers[str(driver)] = session.get_driver(driver).to_json()
