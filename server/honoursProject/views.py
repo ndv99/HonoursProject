@@ -1,4 +1,5 @@
 from msilib.schema import Error
+from urllib import response
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework import status
@@ -9,28 +10,19 @@ import requests
 import json
 import fastf1
 
+def assemble_url(params, url):
+        for p in params:
+            if url[-1] != "?":
+                url = f"{url}&{p}={params[p]}"
+            else:
+                url = f"{url}{p}={params[p]}"
+        return url
+
 # Create your views here.
 
 class SessionView(viewsets.ModelViewSet):
     serializer_class = SessionSerializer
     queryset = Session.objects.all()
-
-    # def create(self, request, *args, **kwargs):
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(self, serializer)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(serializer.data, status.HTTP_200_OK, headers=headers)
-
-
-    # def perform_create(self, serializer):
-    #     serializer.save()
-    
-    # def get_success_headers(self, data):
-    #     try:
-    #         return {'Location': str(data[api_settings.URL_FIELD_NAME])}
-    #     except (TypeError, KeyError):
-    #         return {}
 
 class F1AuthView(viewsets.ViewSet):
 
@@ -60,7 +52,6 @@ class F1AuthView(viewsets.ViewSet):
             response = {'errorReason': "F1 is currently rejecting requests since it thinks I am a bot."}
             return Response(response, status.HTTP_503_SERVICE_UNAVAILABLE)
         
-
 class TelemetryView(viewsets.ViewSet):
 
     def list(self, request, *args, **kwargs):
@@ -137,3 +128,27 @@ class F1VideoView(viewsets.ViewSet):
         elif rescode == 400:
             res = {'err': f'A session with code  {contentid} does not exist.'}
             return Response(res, status.HTTP_400_BAD_REQUEST)
+
+# class RedditAuthView(viewsets.ViewSet):
+#     def list(self, request, *args, **kwargs):
+#         reddit_auth_url = 'https://www.reddit.com/api/v1/access_token'
+#         auth = requests.auth.HTTPBasicAuth(env('REDDIT_CLIENT_ID'), env('REDDIT_SECRET_TOKEN'))
+#         headers = {'User-Agent': 'F1 MultiScreen Viewer'}
+
+class PushshiftView(viewsets.ViewSet):
+
+    def list(self, request, *args, **kwargs):
+        req_headers = request.headers
+        try:
+            params = {
+                "link_id": req_headers['link_id'],
+                "sort": req_headers['sort-by'] + ':' + 'asc',
+            }
+        except KeyError:
+            return Response({'err': 'The headers were provided with incorrect keys, or not at all. Ensure you are using hyphens and not underscores for your keys.'}, status.HTTP_400_BAD_REQUEST)
+        pushshift_url = assemble_url(params, "https://api.pushshift.io/reddit/comment/search/?")
+        print(pushshift_url)
+
+        pushshift_res = requests.get(url=pushshift_url)
+        # print(json.loads(pushshift_res.content))
+        return Response(json.loads(pushshift_res.content), status.HTTP_200_OK)
