@@ -143,6 +143,9 @@ class PushshiftView(viewsets.ViewSet):
             params = {
                 "link_id": req_headers['link_id'],
                 "sort": req_headers['sort-by'] + ':' + 'asc',
+                "before": req_headers['before'][:-3],
+                "after": req_headers['after'][:-3],
+                "size": 10
             }
         except KeyError:
             return Response({'err': 'The headers were provided with incorrect keys, or not at all. Ensure you are using hyphens and not underscores for your keys.'}, status.HTTP_400_BAD_REQUEST)
