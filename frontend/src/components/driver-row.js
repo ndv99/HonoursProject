@@ -25,7 +25,7 @@ function DriverRow (props) {
     const convertMillisToSectorTime = (millis) => {
         var time = new Date(millis)
         var min = time.getMinutes()
-        var sec = time.getSeconds().toString()
+        var sec = ("0" + time.getSeconds().toString()).slice(-2)
         var mil = ("00" + time.getMilliseconds().toString()).slice(-3)
 
         if (min > 0){

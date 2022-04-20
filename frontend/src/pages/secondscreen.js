@@ -21,9 +21,10 @@ export const SecondScreen = () => {
 
     const [counter, setCounter] = useState(0)
     const [lap, setLap] = useState(0)
+    const [totalLaps, setTotalLaps] = useState(0)
     
     useEffect(() => {
-        console.log("This is happening")
+        // console.log("This is happening")
         if (showTelemetry){
             axios.get(
                 "/api/telemetry/",
@@ -35,6 +36,9 @@ export const SecondScreen = () => {
             .then((res) => {
                 let driverlist = Object.values(res.data.drivers).sort((a, b) => (sortDriversByGridPos(a,b)))
                 driverlist = movePLStartersToBack(driverlist)
+                const total_laps = calcTotalLaps(driverlist, res.data.telemetry)
+                setTotalLaps(totalLaps => total_laps) // i hate the way useEffect/useState makes me use this syntax
+                // console.log(totalLaps)
 
                 setDrivers(driverlist)
                 setTelemetry(telemetry => (res.data.telemetry))
@@ -51,7 +55,7 @@ export const SecondScreen = () => {
 
     useEffect(() =>{
         if (showTelemetry){
-            if (lap < 40) {
+            if (lap < totalLaps) {
                 const timer = setTimeout(() => setCounter(counter + 1), 1000)
                 
                 if (isLoading === false){
@@ -73,6 +77,13 @@ export const SecondScreen = () => {
             }
         }
     }, [counter])
+
+    const calcTotalLaps = (driverlist, telem) => {
+        
+        let winner = driverlist.find(driver => driver.Position === 1)
+        // console.log(Object.keys(telem[parseInt(winner.DriverNumber)].LapTime).length)
+        return Object.keys(telem[parseInt(winner.DriverNumber)].LapTime).length
+    }
 
     function getKeyByValue(object, value) {
         return Object.keys(object).find(key => object[key] === value);
