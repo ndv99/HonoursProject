@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react'
 import { Card } from 'reactstrap'
 import LoadingSpinner from './loading-spinner.js';
+import ReactMarkdown from 'react-markdown'
 
 const RedditFeed = (props) => {
 
@@ -41,7 +42,7 @@ const RedditFeed = (props) => {
             <Card>
                 <h2>Race Megathread</h2>
                 {comments.map((comment, i) => (
-                    <div>{comment.body}</div>
+                    <ReactMarkdown>{comment.body}</ReactMarkdown>
                 ))}
             </Card>
         )
