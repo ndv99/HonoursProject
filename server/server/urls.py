@@ -23,6 +23,7 @@ router.register(r'sessions', views.SessionView, 'session')
 router.register(r'f1auth', views.F1AuthView, 'f1auth')
 router.register(r'telemetry', views.TelemetryView, 'telemetry')
 router.register(r'f1video', views.F1VideoView, 'f1video')
+router.register(r'pushshift', views.PushshiftView, 'pushshift')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
