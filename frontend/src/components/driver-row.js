@@ -98,7 +98,7 @@ function DriverRow (props) {
             <Col style={{textAlign: "right", width: "5px", flexGrow: 0, paddingRight: 0}}>
                 <div className="driverColor" style={{backgroundColor: `#${driver.TeamColor}`}}/>
             </Col>
-            <Col>{driver.Abbreviation}</Col>
+            <Col style={{color: driver.CurrentSectorStart == null ? "red" : "black"}}>{driver.Abbreviation}</Col>
             <Col>{driver.CurrentSectorStart != null ? convertMillisToSectorTime(gap) : ""}</Col>
             <Col>{driver.CurrentSectorStart != null ? convertMillisToSectorTime(interval) : ""}</Col>
             <Col>{driver.CurrentSectorStart != null && l1s1complete ? convertMillisToSectorTime(telemetry.Sector1Time[driver.CurrentLap]) : ""}</Col>
