@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Broadcast } from './pages/broadcast.js';
 import { Dashboard } from './pages/dashboard.js';
 import { SecondScreen } from './pages/secondscreen.js'; 
-import { Waiting } from './pages/waiting.js';
+// import { Waiting } from './pages/waiting.js';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,7 +19,7 @@ ReactDOM.render(
         <Route path="/broadcast" element={<Broadcast />}/>
         <Route path="/dashboard" element={<Dashboard />}/>
         <Route path="/secondscreen" element={<SecondScreen />}/>
-        <Route path="/waiting" element={<Waiting />}/>
+        {/* <Route path="/waiting" element={<Waiting />}/> */}
       </Routes>
     </Router>
   </React.StrictMode>,
