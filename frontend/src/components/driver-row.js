@@ -5,6 +5,7 @@ function DriverRow (props) {
 
     const [counter, setCounter] = useState(0)
     const [l1s1complete, setl1s1complete] = useState(false)
+    const [l1complete, setl1complete] = useState(false)
 
     const driver = props.driver
     const telemetry = props.telemetry[parseInt(driver.DriverNumber)]
@@ -30,7 +31,7 @@ function DriverRow (props) {
             }
             const timer = setTimeout(() => setCounter(counter + 1), timeoutLength)
 
-            if (driver.CurrentSector === 1 && lap === 1) {
+            if (driver.CurrentSector === 2 && lap === 1) {
                 setl1s1complete(true)
             }
 
@@ -39,6 +40,7 @@ function DriverRow (props) {
             else { 
                 driver.CurrentSector = 1
                 driver.CurrentLap = incrementDriverCurrentLap(driver.CurrentLap)
+                setl1complete(true)
                 if (driver.DriverNumber === leadingDriver.DriverNumber) {
                     setLap(lap + 1)
                 }
@@ -102,9 +104,9 @@ function DriverRow (props) {
             <Col>{driver.CurrentSectorStart != null ? convertMillisToSectorTime(gap) : ""}</Col>
             <Col>{driver.CurrentSectorStart != null ? convertMillisToSectorTime(interval) : ""}</Col>
             <Col>{driver.CurrentSectorStart != null && l1s1complete ? convertMillisToSectorTime(telemetry.Sector1Time[driver.CurrentLap]) : ""}</Col>
-            <Col>{driver.CurrentSector != 2 && driver.CurrentSectorStart != null ? convertMillisToSectorTime(telemetry.Sector2Time[driver.CurrentLap]) : ""}</Col>
-            <Col>{driver.CurrentSector === 1 && driver.CurrentSectorStart != null ? convertMillisToSectorTime(telemetry.Sector3Time[driver.CurrentLap]) : ""}</Col>
-            <Col style={{color: telemetry.IsPersonalBest[driver.CurrentLap] ? "lime" : (driver.CurrentSectorStart == null ? "red" : "black")}}>{driver.CurrentSectorStart != null ? convertMillisToLaptime(telemetry.LapTime[driver.CurrentLap]) : "STOP"}</Col>
+            <Col>{driver.CurrentSector != 2 && driver.CurrentSectorStart != null && l1s1complete ? convertMillisToSectorTime(telemetry.Sector2Time[driver.CurrentLap]) : ""}</Col>
+            <Col>{driver.CurrentSector === 1 && driver.CurrentSectorStart != null && l1s1complete ? convertMillisToSectorTime(telemetry.Sector3Time[driver.CurrentLap]) : ""}</Col>
+            <Col style={{color: telemetry.IsPersonalBest[driver.CurrentLap] ? "lime" : (driver.CurrentSectorStart == null ? "red" : "black")}}>{driver.CurrentSectorStart != null && l1complete ? convertMillisToLaptime(telemetry.LapTime[driver.CurrentLap]) : (!l1complete ? "" : "STOP")}</Col>
             <Col style={{color: telemetry.Compound[driver.CurrentLap] === "SOFT" ? "red" : telemetry.Compound[driver.CurrentLap] === "MEDIUM" ?  "yellow" : "black"}}>{telemetry.Compound[driver.CurrentLap]}</Col>
         </>
     )
