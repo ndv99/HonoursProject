@@ -19,11 +19,13 @@ export const SecondScreen = () => {
     const [drivers, setDrivers] = useState([])
     const [telemetry, setTelemetry] = useState()
 
-    const [counter, setCounter] = useState(0)
-    const [lap, setLap] = useState(0)
-    const [totalLaps, setTotalLaps] = useState(0)
+    const [lap, setLap] = useState(1)
+    const [totalLaps, setTotalLaps] = useState(2)
+    const [leadingDriver, setLeadingDriver] = useState()
+    const [raceFinished, setRaceFinished] = useState(false)
     
     useEffect(() => {
+        console.log(`Initial state of raceFinished: ${raceFinished}`)
         // console.log("This is happening")
         if (showTelemetry){
             axios.get(
@@ -36,52 +38,53 @@ export const SecondScreen = () => {
             .then((res) => {
                 let driverlist = Object.values(res.data.drivers).sort((a, b) => (sortDriversByGridPos(a,b)))
                 driverlist = movePLStartersToBack(driverlist)
-                const total_laps = calcTotalLaps(driverlist, res.data.telemetry)
+                setLeadingDriver(driverlist[0])
+
+                const repairedTelemetry = calcMissingTimes(res.data.telemetry)
+                
+                const total_laps = calcTotalLaps(driverlist, repairedTelemetry)
                 setTotalLaps(totalLaps => total_laps) // i hate the way useEffect/useState makes me use this syntax
-                // console.log(totalLaps)
 
+                for (const driver in driverlist){
+                    // console.log(driverlist[driver])
+                    driverlist[driver].CurrentLapStart = Object.values(repairedTelemetry[parseInt(driverlist[driver].DriverNumber)].LapStartTime)[0]
+                    driverlist[driver].CurrentSectorStart = Object.values(repairedTelemetry[parseInt(driverlist[driver].DriverNumber)].Sector1SessionTime)[0]
+                    driverlist[driver].CurrentSector = 1
+                    driverlist[driver].CurrentLap = getKeyByValue(repairedTelemetry[parseInt(driverlist[driver].DriverNumber)].LapNumber, 1)
+
+                    console.log(driverlist[driver])
+                }
+                
                 setDrivers(driverlist)
-                setTelemetry(telemetry => (res.data.telemetry))
-
-                calcMissingTimes()
-
+                setTelemetry(telemetry => (repairedTelemetry))
                 setLoading(false)
             })
             .catch((err) => {
+                console.log(err)
                 setError(err)
                 setLoading(false)
             })}
     }, [showTelemetry])
 
-    useEffect(() =>{
-        if (showTelemetry){
-            if (lap < totalLaps) {
-                const timer = setTimeout(() => setCounter(counter + 1), 1000)
-                
-                if (isLoading === false){
-                    if (lap > 0) {
-                        for (var d in drivers){
-                            let driver = drivers[d]
-                            let driverNum = parseInt(driver.DriverNumber)
-                            let driverLap = getKeyByValue(telemetry[driverNum].LapNumber, lap)
-                            let lapStart = telemetry[driverNum].LapStartTime[driverLap]
-                            driver.CurrentLapStart = lapStart
-                        }
-                        sortDriversByLapStartTimes()
-                    }
-
-                    setLap(lap + 1);
+    useEffect(() => {
+        sortDriversByLapStartTimes()
+        if (lap === totalLaps) {
+            setRaceFinished(true)
+            let temp = raceFinished
+            console.log("Race finished. State: " + temp)
+            setDrivers(drivers => drivers.sort((a,b) => {
+                if (a.Position > b.Position) {
+                    return 1
+                } else {
+                    return -1
                 }
-
-                return () => clearTimeout(timer);
-            }
+            }))
         }
-    }, [counter])
+    },[lap])
 
     const calcTotalLaps = (driverlist, telem) => {
         
         let winner = driverlist.find(driver => driver.Position === 1)
-        // console.log(Object.keys(telem[parseInt(winner.DriverNumber)].LapTime).length)
         return Object.keys(telem[parseInt(winner.DriverNumber)].LapTime).length
     }
 
@@ -89,9 +92,9 @@ export const SecondScreen = () => {
         return Object.keys(object).find(key => object[key] === value);
     }      
 
-    const sortDriversByLapStartTimes = () => {
+    const sortDriversByCurrentSectorStartTimes = () => {
         setDrivers(drivers => drivers.sort((a, b) => {
-            if (a.CurrentLapStart > b.CurrentLapStart) {
+            if (a.CurrentSectorStart > b.CurrentSectorStart || a.CurrentSectorStart == null) {
                 return 1
             } else {
                 return -1
@@ -99,21 +102,37 @@ export const SecondScreen = () => {
         }))
     }
 
-    const calcMissingTimes = () => {
-        for (const driver in telemetry){
-            const lap1starttime = telemetry[driver].LapStartTime[Object.keys(telemetry[driver].LapStartTime)[0]]
-            const lap2starttime = telemetry[driver].LapStartTime[Object.keys(telemetry[driver].LapStartTime)[1]]
+    const sortDriversByLapStartTimes = () => {
+        setDrivers(drivers => drivers.sort((a, b) => {
+            let aDriverNumber = parseInt(a.DriverNumber)
+            let bDriverNumber = parseInt(b.DriverNumber)
+
+            let aLapStartTime = Object.values(telemetry[aDriverNumber].LapStartTime)[lap-1]
+            let bLapStartTime = Object.values(telemetry[bDriverNumber].LapStartTime)[lap-1]
+            if (aLapStartTime > bLapStartTime) {
+                return 1
+            } else {
+                return -1
+            }
+        }))
+    }
+
+    const calcMissingTimes = (telem) => {
+        for (const driver in telem){
+            const lap1starttime = telem[driver].LapStartTime[Object.keys(telem[driver].LapStartTime)[0]]
+            const lap2starttime = telem[driver].LapStartTime[Object.keys(telem[driver].LapStartTime)[1]]
 
             const laptime = lap2starttime - lap1starttime
 
-            const s2time = telemetry[driver].Sector2Time[Object.keys(telemetry[driver].Sector2Time)[0]]
-            const s3time = telemetry[driver].Sector3Time[Object.keys(telemetry[driver].Sector3Time)[0]]
+            const s2time = telem[driver].Sector2Time[Object.keys(telem[driver].Sector2Time)[0]]
+            const s3time = telem[driver].Sector3Time[Object.keys(telem[driver].Sector3Time)[0]]
             const s1time = laptime - s2time - s3time
 
-            telemetry[driver].LapTime[Object.keys(telemetry[driver].LapTime)[0]] = laptime
-            telemetry[driver].Sector1Time[Object.keys(telemetry[driver].Sector1Time)[0]] = s1time
-            telemetry[driver].Sector1SessionTime[Object.keys(telemetry[driver].Sector1SessionTime)[0]] = lap1starttime + s1time
+            telem[driver].LapTime[Object.keys(telem[driver].LapTime)[0]] = laptime
+            telem[driver].Sector1Time[Object.keys(telem[driver].Sector1Time)[0]] = s1time
+            telem[driver].Sector1SessionTime[Object.keys(telem[driver].Sector1SessionTime)[0]] = lap1starttime + s1time
         }
+        return telem
     }
 
     const sortDriversByGridPos = (a, b) => {
@@ -152,8 +171,9 @@ export const SecondScreen = () => {
         return(
             <div>
                 <h1>This is the second screen page.</h1>
+                <h2>Lap {lap}/{totalLaps}</h2>
                 {waiting ? <Waiting /> : <></>}
-                {showTelemetry ? <TelemetryTable drivers={drivers} telemetry={telemetry} counter={counter} lap={lap} isLoading={isLoading} error={error}/> : <></>}
+                {showTelemetry ? <TelemetryTable drivers={drivers} telemetry={telemetry} lap={lap} isLoading={isLoading} error={error} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/> : <></>}
                 {twitter ? <TwitterFeed /> : <></>}
                 {reddit ? <RedditFeed after="1567948401425" before="1567952844599"/> : <></>}
             </div>

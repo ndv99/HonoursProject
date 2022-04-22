@@ -4,11 +4,7 @@ import './../styles/components/telemetry.css';
 
 const TelemetryTable = (props) => {
 
-    // const [drivers, setDrivers] = useState(props.drivers)
-    // const [telemetry, setTelemetry] = useState(props.telemetry)
-    // const [lap, setLap] = useState(props.lap)
-
-    const {drivers, telemetry, lap} = props;
+    const {drivers, telemetry, lap, leadingDriver, raceFinished, setLap, sortDriversByCurrentSectorStartTimes} = props;
     
     const track_status_data = {
         "1": "Green flag",
@@ -45,7 +41,7 @@ const TelemetryTable = (props) => {
             {drivers.map((driver, i) => (
                 <Row key={driver.DriverNumber}>
                     <Col>{i + 1}</Col>
-                    <DriverRow driver={driver} telemetry={telemetry} lap={lap} gap={driver.CurrentLapStart - drivers[0].CurrentLapStart} interval={calculateInterval(driver, i)}/>
+                    <DriverRow driver={driver} telemetry={telemetry} lap={lap} gap={driver.CurrentLapStart - drivers[0].CurrentLapStart} interval={calculateInterval(driver, i)} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>
                 </Row>
                 
             ))}
