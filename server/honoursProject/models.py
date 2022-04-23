@@ -25,3 +25,8 @@ class Session(models.Model):
 
     def set_join_code(self, code):
         self.join_code = code
+
+class Device(models.Model):
+
+    session = models.ForeignKey(Session, related_name="devices", on_delete=models.CASCADE)
+    mode = models.IntegerField(blank=True, default=0)
