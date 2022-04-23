@@ -42,17 +42,15 @@ const TelemetryTable = (props) => {
                             <Col>TYRE</Col>
                         </Row>
                         {drivers.map((driver, i) => (
-                            <DriverRow key={driver.DriverNumber} showTelemetry={showTelemetry} pos={i} driver={driver} telemetry={telemetry} lap={lap} gap={driver.CurrentLapStart - drivers[0].CurrentLapStart} interval={calculateInterval(driver, i)} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>
-                            
-                            ))}
+                            <DriverRow key={driver.DriverNumber} showTelemetry={showTelemetry} pos={i} driver={driver} telemetry={telemetry} lap={lap} gap={driver.CurrentLapStart - drivers[0].CurrentLapStart} interval={calculateInterval(driver, i)} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>                            
+                        ))}
                     </Container>
                 </Card>
             : 
                 <Container>
                     {drivers.map((driver, i) => (
-                            <DriverRow key={driver.DriverNumber} showTelemetry={showTelemetry} pos={i} driver={driver} telemetry={telemetry} lap={lap} gap={driver.CurrentLapStart - drivers[0].CurrentLapStart} interval={calculateInterval(driver, i)} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>
-                            
-                            ))}
+                            <DriverRow key={driver.DriverNumber} showTelemetry={showTelemetry} pos={i} driver={driver} telemetry={telemetry} lap={lap} gap={driver.CurrentLapStart - drivers[0].CurrentLapStart} interval={calculateInterval(driver, i)} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>                            
+                    ))}
                 </Container>
             }
         </>
