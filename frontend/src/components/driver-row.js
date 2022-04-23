@@ -31,11 +31,12 @@ function DriverRow (props) {
             } else { 
                 timeoutLength = telemetry.Sector3Time[driver.CurrentLap]
             }
-            const timer = setTimeout(() => setCounter(counter + 1), timeoutLength)
 
-            if (driver.CurrentSector === 2 && lap === 1) {
-                setl1s1complete(true)
-            }
+            // ---------------------------------------------------------------------------------------------
+            // ---------------------------------------------------------------------------------------------
+            const timer = setTimeout(() => setCounter(counter + 1), 5000)// -----------------------
+            // ---------------------------------------------------------------------------------------------
+            // ---------------------------------------------------------------------------------------------
 
             if (driver.CurrentSector != 3) { 
                 driver.CurrentSector += 1} 
@@ -48,7 +49,11 @@ function DriverRow (props) {
                 if (driver.DriverNumber === leadingDriver.DriverNumber) {
                     setLap(lap + 1)
                 }
-            }            
+            }
+            
+            if (driver.CurrentSector === 2 && lap === 1) {
+                setl1s1complete(true)
+            }
             
             if (driver.CurrentSector === 1) {
                 driver.CurrentSectorStart = telemetry.Sector1SessionTime[driver.CurrentLap]
@@ -110,7 +115,7 @@ function DriverRow (props) {
                     <Col style={{color: driver.CurrentSectorStart == null ? "red" : "black"}}>{driver.Abbreviation}</Col>
                     <Col>{driver.CurrentSectorStart != null ? convertMillisToSectorTime(gap) : ""}</Col>
                     <Col>{driver.CurrentSectorStart != null ? convertMillisToSectorTime(interval) : ""}</Col>
-                    <Col>{driver.CurrentSectorStart != null && l1s1complete ? convertMillisToSectorTime(telemetry.Sector1Time[driver.CurrentLap]) : ""}</Col>
+                    <Col>{driver.CurrentSectorStart != null && l1s1complete ? (driver.CurrentSector === 1 ? convertMillisToSectorTime(telemetry.Sector1Time[(parseInt(driver.CurrentLap) - 1).toString()]) : convertMillisToSectorTime(telemetry.Sector1Time[driver.CurrentLap])) : ""}</Col>
                     <Col>{driver.CurrentSector != 2 && driver.CurrentSectorStart != null && l1s1complete ? convertMillisToSectorTime(telemetry.Sector2Time[driver.CurrentLap]) : ""}</Col>
                     <Col>{driver.CurrentSector === 1 && driver.CurrentSectorStart != null && l1s1complete ? convertMillisToSectorTime(telemetry.Sector3Time[driver.CurrentLap]) : ""}</Col>
                     <Col style={{color: telemetry.IsPersonalBest[driver.CurrentLap] ? "lime" : (driver.CurrentSectorStart == null ? "red" : "black")}}>{driver.CurrentSectorStart != null && l1complete ? convertMillisToLaptime(telemetry.LapTime[driver.CurrentLap]) : (!l1complete ? "" : "STOP")}</Col>

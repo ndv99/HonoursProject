@@ -5,6 +5,7 @@ import RedditFeed from '../components/reddit-feed';
 import { Waiting } from '../components/waiting.js';
 import axios from "axios";
 import LoadingSpinner from '../components/loading-spinner'
+import { Container, Row, Col } from "reactstrap";
 
 export const SecondScreen = () => {
 
@@ -187,14 +188,24 @@ export const SecondScreen = () => {
         )
     } else { 
         return(
-            <div>
-                <h1>This is the second screen page.</h1>
-                <h2>Lap {lap}/{totalLaps}</h2>
-                {waiting ? <Waiting /> : <></>}
-                <TelemetryTable showTelemetry={showTelemetry} drivers={drivers} telemetry={telemetry} lap={lap} isLoading={isLoading} error={error} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>
-                {twitter ? <TwitterFeed /> : <></>}
-                {reddit ? <RedditFeed after={after} before={before}/> : <></>}
-            </div>
+            <>
+                {waiting ? <Waiting /> : 
+                    <>
+                        <h1>2019 Italian Grand Prix - Monza</h1>
+                        <h2>Lap {lap}/{totalLaps}</h2>
+                        <Container style={{margin: 0, maxWidth: '100%'}}>
+                            <Row>
+                                <Col style={{flexGrow: 5}}>
+                                    <TelemetryTable showTelemetry={showTelemetry} drivers={drivers} telemetry={telemetry} lap={lap} isLoading={isLoading} error={error} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>
+                                </Col>
+                                <Col style={{flexGrow: 2}}>
+                                    {reddit ? <RedditFeed after={after} before={before}/> : <></>}
+                                </Col>
+                            </Row>
+                        </Container>
+                    </>
+                }
+            </>
         )
     }
 }
