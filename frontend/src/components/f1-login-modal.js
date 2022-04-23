@@ -2,41 +2,29 @@ import { useState } from 'react';
 import { Modal, ModalBody, ModalHeader, ModalFooter, Form, FormGroup, Label, Input, Button } from 'reactstrap';
 
 function F1LoginModal (props) {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [token, setToken] = useState("")
 
     const { toggle, onSave } = props;
 
     const handleSubmit = (e) => {
-        onSave(email, password)
+        onSave(token)
         e.preventDefault();
     }
 
     return(
         <Modal isOpen={true} toggle={toggle}>
-            <ModalHeader toggle={toggle}>Enter your F1TV Pro login details</ModalHeader>
+            <ModalHeader toggle={toggle}>Enter your F1TV Pro Entitlement Token</ModalHeader>
             <ModalBody>
                 <Form onSubmit={(e) => handleSubmit(e)}>
                     <FormGroup>
-                        <Label for="login-email">Email</Label>
+                        <Label for="login-token">Entitlement Token</Label>
                         <Input 
-                            type="email"
-                            id="login-email"
-                            name="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Email address"
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="login-password">Password</Label>
-                        <Input 
-                            type="password"
-                            id="login-password"
-                            name="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            placeholder="Password"
+                            type="text"
+                            id="login-token"
+                            name="token"
+                            value={token}
+                            onChange={(e) => setToken(e.target.value)}
+                            placeholder="Entitlement token"
                         />
                     </FormGroup>
                     <Button type="submit" color="danger">Log in</Button>

@@ -19,16 +19,16 @@ function CreateSessionForm (){
         setModal(!modal)
     };
 
-    const handleSubmit = (email, password) => {
+    const handleSubmit = (token) => {
         axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
         axios.defaults.xsrfCookieName = "csrftoken";
 
-        axios.post("/api/f1auth/", {Login: email, Password: password})
-        .then((res) => {
-            cookies.set('entitlementToken', res.data.subscriptionToken)
-            create_new_session(res.data.subscriptionToken);
-        })
-        .catch((err) => console.log(err))
+        // axios.post("/api/f1auth/", {})
+        // .then((res) => {
+        cookies.set('entitlementToken', token)
+        create_new_session(token);
+        // })
+        // .catch((err) => console.log(err))
 
         // cookies.set('entitlementToken', this.state.entitlementToken)
 

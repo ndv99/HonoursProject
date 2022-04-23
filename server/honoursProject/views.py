@@ -98,7 +98,8 @@ class F1VideoView(viewsets.ViewSet):
         try:
             f1vid_headers = { 
                 "ascendontoken": headers["ascendontoken"], 
-                "User-Agent": "RaceControl f1viewer",
+                'apikey': 'fCUCjWrKPu9ylJwRAv8BpGLEgiAuThx7'
+                # "User-Agent": "RaceControl f1viewer",
                 }
             contentid = headers["contentid"]
             # print(f'Ascendon Token: {headers["ascendontoken"]}')
@@ -106,6 +107,9 @@ class F1VideoView(viewsets.ViewSet):
         except KeyError:
             res = {'err': 'The headers were provided with incorrect keys, or not at all'}
             return Response(res, status.HTTP_400_BAD_REQUEST)
+
+        # ascendontoken = headers['ascendontoken']
+        # print(f"user's entitlement token: {ascendontoken}")
 
         f1_response = requests.get(url=(f'{f1vid_url}{contentid}'), headers=f1vid_headers)
 

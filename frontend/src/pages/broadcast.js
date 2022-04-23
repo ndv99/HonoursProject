@@ -1,22 +1,30 @@
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import Cookies from "universal-cookie";
 
 export const Broadcast = () => {
 
-    const [url, setURL] = useState("")
+    const [url, setURL] = useState("https://ott-video-fer-cf.formula1.com/ondemand/93ff/_C_/3/2/wif0908043337/1/clip_2_master.m3u8?kid=1042&exp=1650828458&ttl=1440&token=yCraXwLFfl~Ur5bv0yPCJOi2kY2UeJbfzudf0-SN7wo_")
+    const cookies = new Cookies()
 
-    useEffect(() => {
-        getPlaybackURL()
-    }, [])
+    // useEffect(() => {
+    //     getPlaybackURL()
+    // }, [])
 
     const getPlaybackURL = () => {
         axios.get(
             "/api/f1video/", 
             {headers: {
-                'ascendontoken': 'eyJraWQiOiIxIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJFeHRlcm5hbEF1dGhvcml6YXRpb25zQ29udGV4dERhdGEiOiJVU0EiLCJTdWJzY3JpcHRpb25TdGF0dXMiOiJhY3RpdmUiLCJTdWJzY3JpYmVySWQiOiIxNzk3MDUzMzQiLCJGaXJzdE5hbWUiOiJHb3Jkb24iLCJMYXN0TmFtZSI6IkZyZWVtYW4iLCJleHAiOjE2NTAwNjA3NTMsIlNlc3Npb25JZCI6ImV5SmhiR2NpT2lKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eU1EQXhMekEwTDNodGJHUnphV2N0Ylc5eVpTTm9iV0ZqTFhOb1lUSTFOaUlzSW5SNWNDSTZJa3BYVkNKOS5leUppZFNJNklqRXdNREV4SWl3aWMya2lPaUkyTUdFNVlXUTROQzFsT1ROa0xUUTRNR1l0T0RCa05pMWhaak0zTkRrMFpqSmxNaklpTENKb2RIUndPaTh2YzJOb1pXMWhjeTU0Yld4emIyRndMbTl5Wnk5M2N5OHlNREExTHpBMUwybGtaVzUwYVhSNUwyTnNZV2x0Y3k5dVlXMWxhV1JsYm5ScFptbGxjaUk2SWpFM09UY3dOVE16TkNJc0ltbGtJam9pTkdVNU1EUmlNREV0TXpCa05TMDBaRGt4TFdJd09EUXRNRFZrWldZd04yWTJPVFU1SWl3aWRDSTZJakVpTENKc0lqb2laVzR0UjBJaUxDSmtZeUk2SWpNMk5EUWlMQ0poWldRaU9pSXlNREl5TFRBMExUSTFWREl5T2pFeU9qTXpMakkzT1ZvaUxDSmtkQ0k2SWpFaUxDSmxaQ0k2SWpJd01qSXRNRFV0TVRGVU1qSTZNVEk2TXpNdU1qYzVXaUlzSW1ObFpDSTZJakl3TWpJdE1EUXRNVEpVTWpJNk1USTZNek11TWpjNVdpSXNJbWx3SWpvaU1tRXdNanBqTjJVNk1UVXdOanBoWlRBd09tUTRabVU2TldRMU16bzFZV00xT2poaE16UWlMQ0pqYnlJNklrZENVaUlzSW14aGRDSTZJalUwSWl3aWJHOXVaeUk2SWkweUlpd2libUptSWpveE5qUTVOekUxTVRVekxDSmxlSEFpT2pFMk5USXpNRGN4TlRNc0ltbHpjeUk2SW1GelkyVnVaRzl1TG5SMklpd2lZWFZrSWpvaVlYTmpaVzVrYjI0dWRIWWlmUS5meFBMeVhHcXE2QjJSSHhqVW16XzZoZko2MW45VVZONEZnX3BEWFcwQkRZIiwiaWF0IjoxNjQ5NzE1MTUzLCJTdWJzY3JpYmVkUHJvZHVjdCI6IkYxIFRWIFBybyBNb250aGx5IiwianRpIjoiYTg3ZDZiMWUtYjEyMy00MWYwLTlkNWItZDAxMTEwOWIyMTVkIn0.jkSY1-ZdZttFYU6yhXc3qTkQrZtLXvwX5shTRfSbbI_Aqx0FZRUStfA5Wc63x1IocrePig1PAi5ZkWWUMgsF1DPRNJIe4X6tbh9FFY3eOt88I-0xEJAFWJQiZ37MzuPer9qSD6uupiGmpu9Ra3ivv8B0nMgqkikFskQxE1LryF8nQLhk1NCCVqf66j3z2QLgOlb_nz2qZgb25isLpkmJHfuypkGhLdP_PjkLtaVJUpIkz71CS4Q-yGuLJ1dIa8X295tyoqT783LRH98d1Y2HEBYqiQykClL21RIyk_rb1zy3ue2iNVAmr4H1JeN4CQDhaoO9AEtIq49ZdvSg8bM5FA',
+                'ascendontoken': cookies.get('entitlementToken'),
                 'contentid': '1000000731'
-            }
-        })
+            }}
+            // "https://f1tv.formula1.com/1.0/R/ENG/BIG_SCREEN_HLS/ALL/CONTENT/PLAY?contentId=1000000731",
+            // {headers: {
+            //     // 'ascendontoken': cookies.get('entitlementToken')
+            //     'apikey': 'fCUCjWrKPu9ylJwRAv8BpGLEgiAuThx7',
+            //     'ascendontoken': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHRlcm5hbEF1dGhvcml6YXRpb25zQ29udGV4dERhdGEiOiJVU0EiLCJTdWJzY3JpcHRpb25TdGF0dXMiOiJhY3RpdmUiLCJTdWJzY3JpYmVySWQiOiIxNzk3MDUzMzQiLCJGaXJzdE5hbWUiOiJHb3Jkb24iLCJMYXN0TmFtZSI6IkZyZWVtYW4iLCJTZXNzaW9uSWQiOiJleUpoYkdjaU9pSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF4THpBMEwzaHRiR1J6YVdjdGJXOXlaU05vYldGakxYTm9ZVEkxTmlJc0luUjVjQ0k2SWtwWFZDSjkuZXlKaWRTSTZJakV3TURFeElpd2ljMmtpT2lJMk1HRTVZV1E0TkMxbE9UTmtMVFE0TUdZdE9EQmtOaTFoWmpNM05EazBaakpsTWpJaUxDSm9kSFJ3T2k4dmMyTm9aVzFoY3k1NGJXeHpiMkZ3TG05eVp5OTNjeTh5TURBMUx6QTFMMmxrWlc1MGFYUjVMMk5zWVdsdGN5OXVZVzFsYVdSbGJuUnBabWxsY2lJNklqRTNPVGN3TlRNek5DSXNJbWxrSWpvaU1HWmpORE5pWldRdE9HSmxNQzAwTVdGakxUbGpZekV0WlRBeU0yTXlNRFpsWkRCbUlpd2lkQ0k2SWpFaUxDSnNJam9pWlc0dFIwSWlMQ0prWXlJNklqTTJORFFpTENKaFpXUWlPaUl5TURJeUxUQTFMVEEzVkRFNU9qRTJPakUzTGpNME0xb2lMQ0prZENJNklqRWlMQ0psWkNJNklqSXdNakl0TURVdE1qTlVNVGs2TVRZNk1UY3VNelF6V2lJc0ltTmxaQ0k2SWpJd01qSXRNRFF0TWpSVU1UazZNVFk2TVRjdU16UXpXaUlzSW1sd0lqb2lNbUV3TWpwak4yVTZNVFV3TmpwaFpUQXdPbU13TWpBNlpXVTNaVHBrTjJGaU9qSTFaRFlpTENKamJ5STZJa2RDVWlJc0lteGhkQ0k2SWpVMElpd2liRzl1WnlJNklpMHlJaXdpYm1KbUlqb3hOalV3TnpReE16YzNMQ0psZUhBaU9qRTJOVE16TXpNek56Y3NJbWx6Y3lJNkltRnpZMlZ1Wkc5dUxuUjJJaXdpWVhWa0lqb2lZWE5qWlc1a2IyNHVkSFlpZlEuYTQ5OFYtTmFYeS11X0VMT3hSUUtudjBWZjJlUFRiM3FRVDhPNGN5T3JsQSIsIlN1YnNjcmliZWRQcm9kdWN0IjoiRjEgVFYgUHJvIE1vbnRobHkiLCJqdGkiOiJhYjg2NmU3OS02MWQ0LTQ5NmItOGQwZC05YTYxNTgwMDJlZTIiLCJTdWJzY3JpcHRpb24iOiJQUk8iLCJpYXQiOjE2NTA3NDIwNTcsImV4cCI6MTY1MTA4NzY1NywiaXNzIjoiRjEifQ.PpJkAWCagkeryUdNl02AoQX911DlRUxtFgycatIsXbs'
+            // }}
+        )
         .then((res) => setURL(res.data))
         .catch((err) => console.log(err))
     }
@@ -24,7 +32,8 @@ export const Broadcast = () => {
     return(
         <>
             <h1>Hi. You should install VLC media player.</h1>
-            <p>and then open <a href={url}>this</a> with it</p>
+            <p>Then open it, click "File / Open Network Stream" and paste the following URL:</p>
+            <p>{url}</p>
         </>
     )
 }
