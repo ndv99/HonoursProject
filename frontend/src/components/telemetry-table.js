@@ -25,28 +25,35 @@ const TelemetryTable = (props) => {
     }
     
     return(
-        <Card>
-            <Container>
-                {showTelemetry ? 
-                    <Row>
-                        <Col>POS</Col>
-                        <Col style={{width: "5px", flexGrow: 0, paddingRight: 0}}/>
-                        <Col>NAME</Col>
-                        <Col>GAP</Col>
-                        <Col>INT</Col>
-                        <Col>S1</Col>
-                        <Col>S2</Col>
-                        <Col>S3</Col>
-                        <Col>LAP</Col>
-                        <Col>TYRE</Col>
-                    </Row>
-                : <></>}
-                {drivers.map((driver, i) => (
-                    <DriverRow key={driver.DriverNumber} showTelemetry={showTelemetry} pos={i} driver={driver} telemetry={telemetry} lap={lap} gap={driver.CurrentLapStart - drivers[0].CurrentLapStart} interval={calculateInterval(driver, i)} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>
-                    
-                ))}
-            </Container>
-        </Card>
+        <>
+            {showTelemetry ? 
+                <Card>
+                    <Container>
+                        <Row>
+                            <Col>POS</Col>
+                            <Col style={{width: "5px", flexGrow: 0, paddingRight: 0}}/>
+                            <Col>NAME</Col>
+                            <Col>GAP</Col>
+                            <Col>INT</Col>
+                            <Col>S1</Col>
+                            <Col>S2</Col>
+                            <Col>S3</Col>
+                            <Col>LAP</Col>
+                            <Col>TYRE</Col>
+                        </Row>
+                        {drivers.map((driver, i) => (
+                            <DriverRow key={driver.DriverNumber} showTelemetry={showTelemetry} pos={i} driver={driver} telemetry={telemetry} lap={lap} gap={driver.CurrentLapStart - drivers[0].CurrentLapStart} interval={calculateInterval(driver, i)} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>                            
+                        ))}
+                    </Container>
+                </Card>
+            : 
+                <Container>
+                    {drivers.map((driver, i) => (
+                            <DriverRow key={driver.DriverNumber} showTelemetry={showTelemetry} pos={i} driver={driver} telemetry={telemetry} lap={lap} gap={driver.CurrentLapStart - drivers[0].CurrentLapStart} interval={calculateInterval(driver, i)} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>                            
+                    ))}
+                </Container>
+            }
+        </>
     )
 }
 

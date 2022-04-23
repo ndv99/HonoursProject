@@ -193,16 +193,24 @@ export const SecondScreen = () => {
                     <>
                         <h1>2019 Italian Grand Prix - Monza</h1>
                         <h2>Lap {lap}/{totalLaps}</h2>
-                        <Container style={{margin: 0, maxWidth: '100%'}}>
-                            <Row>
-                                <Col style={{flexGrow: 5}}>
-                                    <TelemetryTable showTelemetry={showTelemetry} drivers={drivers} telemetry={telemetry} lap={lap} isLoading={isLoading} error={error} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>
-                                </Col>
-                                <Col style={{flexGrow: 2}}>
-                                    {reddit ? <RedditFeed after={after} before={before}/> : <></>}
-                                </Col>
-                            </Row>
-                        </Container>
+                        { showTelemetry && reddit ? 
+                            <Container style={{margin: 0, maxWidth: '100%'}}>
+                                <Row>
+                                    <Col style={{flexGrow: 5}}>
+                                        <TelemetryTable showTelemetry={showTelemetry} drivers={drivers} telemetry={telemetry} lap={lap} isLoading={isLoading} error={error} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>
+                                    </Col>
+                                    <Col style={{flexGrow: 2}}>
+                                        <RedditFeed after={after} before={before}/>
+                                    </Col>
+                                </Row>
+                            </Container>
+                        :
+                            <>
+                                <TelemetryTable showTelemetry={showTelemetry} drivers={drivers} telemetry={telemetry} lap={lap} isLoading={isLoading} error={error} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>
+                                {reddit ? <RedditFeed after={after} before={before}/> : <></>}
+                            </>
+
+                        }
                     </>
                 }
             </>
