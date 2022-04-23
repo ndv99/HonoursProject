@@ -1,5 +1,5 @@
 
-# Honours Project
+# Honours Project [![Badge License]][License]
 
 A multi - screen viewing system for **Formula One** races, <br>
 created for the research at the **[University of Dundee]** .
@@ -94,6 +94,10 @@ created for the research at the **[University of Dundee]** .
     
 
 <!----------------------------------------------------------------------------->
+
+
+[Badge License]: https://img.shields.io/badge/License-Unknown-darkgray
+[License]: #
 
 [University of Dundee]: https://www.dundee.ac.uk/
 
