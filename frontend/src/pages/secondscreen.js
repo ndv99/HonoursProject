@@ -9,7 +9,7 @@ import LoadingSpinner from '../components/loading-spinner'
 export const SecondScreen = () => {
 
     // this will later be changed to use props based on whatever the control device chooses to do
-    const [reddit, setReddit] = useState(false)
+    const [reddit, setReddit] = useState(true)
     const [twitter, setTwitter] = useState(false)
     const [showTelemetry, setShowTelemetry] = useState(true)
     const [waiting, setWaiting] = useState(false)
@@ -23,51 +23,63 @@ export const SecondScreen = () => {
     const [totalLaps, setTotalLaps] = useState(2)
     const [leadingDriver, setLeadingDriver] = useState()
     const [raceFinished, setRaceFinished] = useState(false)
+
+    const [before, setBefore] = useState(0)
+    const [after, setAfter] = useState(0)
     
     useEffect(() => {
-        console.log(`Initial state of raceFinished: ${raceFinished}`)
+        // console.log(`Initial state of raceFinished: ${raceFinished}`)
         // console.log("This is happening")
-        if (showTelemetry){
-            axios.get(
-                "/api/telemetry/",
-                {headers: {
-                    'year': '2019',
-                    'gp': 'Italian',
-                    'identifier': 'r'
-                }})
-            .then((res) => {
-                let driverlist = Object.values(res.data.drivers).sort((a, b) => (sortDriversByGridPos(a,b)))
-                driverlist = movePLStartersToBack(driverlist)
-                setLeadingDriver(driverlist[0])
+        axios.get(
+            "/api/telemetry/",
+            {headers: {
+                'year': '2019',
+                'gp': 'Italian',
+                'identifier': 'r'
+            }})
+        .then((res) => {
+            let driverlist = Object.values(res.data.drivers).sort((a, b) => (sortDriversByGridPos(a,b)))
+            driverlist = movePLStartersToBack(driverlist)
+            setLeadingDriver(driverlist[0])
 
-                const repairedTelemetry = calcMissingTimes(res.data.telemetry)
-                
-                const total_laps = calcTotalLaps(driverlist, repairedTelemetry)
-                setTotalLaps(totalLaps => total_laps) // i hate the way useEffect/useState makes me use this syntax
+            const repairedTelemetry = calcMissingTimes(res.data.telemetry)
+            
+            const total_laps = calcTotalLaps(driverlist, repairedTelemetry)
+            setTotalLaps(totalLaps => total_laps) // i hate the way useEffect/useState makes me use this syntax
 
-                for (const driver in driverlist){
-                    // console.log(driverlist[driver])
-                    driverlist[driver].CurrentLapStart = Object.values(repairedTelemetry[parseInt(driverlist[driver].DriverNumber)].LapStartTime)[0]
-                    driverlist[driver].CurrentSectorStart = Object.values(repairedTelemetry[parseInt(driverlist[driver].DriverNumber)].Sector1SessionTime)[0]
-                    driverlist[driver].CurrentSector = 1
-                    driverlist[driver].CurrentLap = getKeyByValue(repairedTelemetry[parseInt(driverlist[driver].DriverNumber)].LapNumber, 1)
+            for (const driver in driverlist){
+                // console.log(driverlist[driver])
+                driverlist[driver].CurrentLapStartDate = Object.values(repairedTelemetry[parseInt(driverlist[driver].DriverNumber)].LapStartDate)[0]
+                driverlist[driver].CurrentLapStart = Object.values(repairedTelemetry[parseInt(driverlist[driver].DriverNumber)].LapStartTime)[0]
+                driverlist[driver].CurrentSectorStart = Object.values(repairedTelemetry[parseInt(driverlist[driver].DriverNumber)].Sector1SessionTime)[0]
+                driverlist[driver].CurrentSector = 1
+                driverlist[driver].CurrentLap = getKeyByValue(repairedTelemetry[parseInt(driverlist[driver].DriverNumber)].LapNumber, 1)
 
-                    console.log(driverlist[driver])
-                }
-                
-                setDrivers(driverlist)
-                setTelemetry(telemetry => (repairedTelemetry))
-                setLoading(false)
-            })
-            .catch((err) => {
-                console.log(err)
-                setError(err)
-                setLoading(false)
-            })}
-    }, [showTelemetry])
+                console.log(driverlist[driver])
+            }
+
+            setBefore(driverlist[0].CurrentLapStartDate)
+            setAfter(Object.values(repairedTelemetry[parseInt(driverlist[0].DriverNumber)].LapStartTime)[1])
+            
+            setDrivers(driverlist)
+            setTelemetry(telemetry => (repairedTelemetry))
+            setLoading(false)
+        })
+        .catch((err) => {
+            console.log(err)
+            setError(err)
+            setLoading(false)
+        })
+    }, [])
 
     useEffect(() => {
         sortDriversByLapStartTimes()
+        setDriverCurrentLapStarts()
+        if (lap > 1) {
+            setAfter(before)
+            setBefore(drivers[0].CurrentLapStartDate)
+        }
+
         if (lap === totalLaps) {
             setRaceFinished(true)
             let temp = raceFinished
@@ -100,6 +112,12 @@ export const SecondScreen = () => {
                 return -1
             }
         }))
+    }
+
+    const setDriverCurrentLapStarts = () => {
+        for (const d in drivers) {
+            drivers[d].CurrentLapStart = Object.values(telemetry[parseInt(drivers[d].DriverNumber)].LapStartTime)[lap-1]
+        }
     }
 
     const sortDriversByLapStartTimes = () => {
@@ -173,9 +191,9 @@ export const SecondScreen = () => {
                 <h1>This is the second screen page.</h1>
                 <h2>Lap {lap}/{totalLaps}</h2>
                 {waiting ? <Waiting /> : <></>}
-                {showTelemetry ? <TelemetryTable drivers={drivers} telemetry={telemetry} lap={lap} isLoading={isLoading} error={error} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/> : <></>}
+                <TelemetryTable showTelemetry={showTelemetry} drivers={drivers} telemetry={telemetry} lap={lap} isLoading={isLoading} error={error} leadingDriver={leadingDriver} raceFinished={raceFinished} setLap={setLap} sortDriversByCurrentSectorStartTimes={sortDriversByCurrentSectorStartTimes}/>
                 {twitter ? <TwitterFeed /> : <></>}
-                {reddit ? <RedditFeed after="1567948401425" before="1567952844599"/> : <></>}
+                {reddit ? <RedditFeed after={after} before={before}/> : <></>}
             </div>
         )
     }

@@ -23,7 +23,7 @@ const RedditFeed = (props) => {
         }})
         .then((res) => {
             setCommments(res.data.data);
-            console.log(comments)
+            // console.log(comments)
             setLoading(false)
         })
         .catch((err) => setError(err))
@@ -42,7 +42,7 @@ const RedditFeed = (props) => {
             <Card>
                 <h2>Race Megathread</h2>
                 {comments.map((comment, i) => (
-                    <ReactMarkdown>{comment.body}</ReactMarkdown>
+                    <ReactMarkdown key={i}>{comment.body}</ReactMarkdown>
                 ))}
             </Card>
         )
