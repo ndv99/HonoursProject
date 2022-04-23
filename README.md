@@ -8,13 +8,19 @@ created for the research at the **[University of Dundee]** .
 
 ## Setup
 
+<br>
+
 1. Clone this repository
+
+    <br>
 
 2. Create a python virtual environment
 
     ```sh
     python3 -m venv HonoursProject
     ```
+    
+    <br>
 
 3. Activate the virtual environment
 
@@ -30,28 +36,39 @@ created for the research at the **[University of Dundee]** .
     ./HonoursProject/bin/activate
     ```
     
+    <br>
+    
 4. Enter the folder
 
     ```sh
     cd HonoursProject
     ```
+    
+    <br>
 
 5. Install the project requirements for the **backend**
 
     ```sh
     pip install -r requirements.txt
     ```
+    
+    <br>
 
 6. Navigate to the server folder 
 
     ```sh
     cd server
     ```
+    
+    <br>
+    
 7. Migrate the server
 
     ```sh
     py manage.py migrate
     ```
+
+    <br>
 
 8. Create a superuser
     
@@ -61,26 +78,36 @@ created for the research at the **[University of Dundee]** .
     
     *Give it a **Username** and* ***Password***
 
+    <br>
+
 9. Run the server
 
     ```sh
     py manage.py runserver
     ```
+    
+    <br>
 
 10. Open a new terminal and navigate out of <br>
     the server folder into the frontend folder
+
+    <br>
 
 9. Install the requirements
 
     ```sh
     npm install
     ```
+    
+    <br>
 
 10. Run the frontend
     
     ```sh
     npm start
     ```
+    
+    <br>
 
 11. Navigate to the following urls in your browser:
 
@@ -96,10 +123,10 @@ created for the research at the **[University of Dundee]** .
 <!----------------------------------------------------------------------------->
 
 
-[Badge License]: https://img.shields.io/badge/License-Unknown-darkgray
+[Badge License]: https://img.shields.io/badge/License-Unknown-darkgray?style=for-the-badge
 [License]: #
 
 [University of Dundee]: https://www.dundee.ac.uk/
 
-[Frontend]: localhost:3000
-[Backend]: localhost:8000/admin
+[Frontend]: http://localhost:3000
+[Backend]: http://localhost:8000/admin
