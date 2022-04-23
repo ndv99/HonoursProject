@@ -13,6 +13,10 @@ class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Session
         fields = ('id', 'join_code', 'time_delay', 'ascendToken', 'devices')
+
+    def create(self, validated_data):
+        session = Session.objects.create(**validated_data)
+        return session
     
     def update(self, instance, validated_data):
         print(validated_data)

@@ -10,7 +10,7 @@ def create_random_code():
                 return "%d" % code
 
 class Session(models.Model):
-    join_code = models.CharField(max_length=6, blank=True, default=create_random_code)
+    join_code = models.CharField(max_length=6, blank=True)
     time_delay = models.IntegerField() # this is in seconds
     ascendToken = models.CharField(max_length=2048, blank=True)
 
@@ -18,9 +18,10 @@ class Session(models.Model):
         return self.join_code
 
     def save(self, *args, **kwargs):
-        code = create_random_code()
-        self.set_join_code(code)
-        print("New session created")
+        if not self.join_code:
+            code = create_random_code()
+            self.set_join_code(code)
+            print("New session created")
         return super().save(*args, **kwargs)
 
     def set_join_code(self, code):
