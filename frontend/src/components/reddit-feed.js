@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react'
-import { Card } from 'reactstrap'
+import { Card, Container, Col, Row } from 'reactstrap'
 import LoadingSpinner from './loading-spinner.js';
 import ReactMarkdown from 'react-markdown'
 
@@ -23,7 +23,7 @@ const RedditFeed = (props) => {
         }})
         .then((res) => {
             setCommments(res.data.data);
-            console.log(comments)
+            // console.log(comments)
             setLoading(false)
         })
         .catch((err) => setError(err))
@@ -40,10 +40,19 @@ const RedditFeed = (props) => {
     } else {
         return(
             <Card>
-                <h2>Race Megathread</h2>
-                {comments.map((comment, i) => (
-                    <ReactMarkdown>{comment.body}</ReactMarkdown>
-                ))}
+                <Container>
+                    <h2>Race Megathread</h2>
+                    <Col>
+                        {comments.map((comment, i) => (
+                            <Row key={i} style={{border: "1px solid rgba(0, 0, 0, 0.125)", borderBottom: 0}}>
+                                <div>
+                                    <p style={{color: "rgba(0, 0, 0, 0.4)"}}>u/{comment.author}</p>
+                                    <ReactMarkdown>{comment.body}</ReactMarkdown>
+                                </div>
+                            </Row>
+                        ))}
+                    </Col>
+                </Container>
             </Card>
         )
     }
