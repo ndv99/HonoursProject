@@ -49,10 +49,12 @@ function JoinSessionForm () {
     }
 
     const join_session = (session_id) => {
+        console.log("Joining session")
         axios.patch(`/api/sessions/${session_id}/`, {devices: [{}]})
             .then((res) => {
+                console.log("Session joined")
                 cookies.set('device_id', res.data.devices.at(-1).id)
-                cookies.set('entitlementToen', res.data.ascendToken)
+                cookies.set('entitlementToken', res.data.ascendToken)
                 navigate_to_secondscreen()
             })
             .catch((err) => console.log(err))

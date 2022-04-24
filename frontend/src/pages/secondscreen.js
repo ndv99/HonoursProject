@@ -11,10 +11,10 @@ import Cookies from "universal-cookie";
 export const SecondScreen = () => {
 
     // this will later be changed to use props based on whatever the control device chooses to do
-    const [reddit, setReddit] = useState(true)
+    const [reddit, setReddit] = useState(false)
     const [twitter, setTwitter] = useState(false)
-    const [showTelemetry, setShowTelemetry] = useState(true)
-    const [waiting, setWaiting] = useState(false)
+    const [showTelemetry, setShowTelemetry] = useState(false)
+    const [waiting, setWaiting] = useState(true)
 
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState("")
@@ -82,7 +82,9 @@ export const SecondScreen = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => setCounter(counter + 1), 2000)
+
         if (!isLoading) {
+            console.log('device fetch is happening')
     
             axios.get(`/api/sessions/${cookies.get('session_id')}`)
             .then((res) => {
