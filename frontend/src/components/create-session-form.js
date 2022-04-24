@@ -45,6 +45,7 @@ function CreateSessionForm (){
         axios
         .post("/api/sessions/", new_session)
         .then((res) => {
+            cookies.set('session_id', res.data.id)
             cookies.set('session_code', res.data.join_code, {path:'/'})
             console.log("Session created successfully. Join code: " + res.data.join_code)
             navigate_to_dashboard()

@@ -10,6 +10,8 @@ function JoinSessionForm () {
     const [sessions_list, setSessionsList] = useState([])
     const [value, setValue] = useState("")
 
+    const cookies = new Cookies();
+
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -28,18 +30,32 @@ function JoinSessionForm () {
 
         let valid_code = sessions_list.find(obj => {
             return obj.join_code === value;
-          })
+        })
 
         if (valid_code){
-            const cookies = new Cookies();
+            
             cookies.set('session_code', value, {path: '/'})
+
+            const session_id = valid_code.id
+            cookies.set('session_id', session_id, {path: '/'})
+
+            join_session(session_id)
 
             // this.state.redirect = true;
             // setRedirect(true)
-            navigate_to_secondscreen()
         } else {
             alert("Uh oh, " + value + " is not a valid session code!")
         }
+    }
+
+    const join_session = (session_id) => {
+        axios.patch(`/api/sessions/${session_id}/`, {devices: [{}]})
+            .then((res) => {
+                cookies.set('device_id', res.data.devices.at(-1).id)
+                cookies.set('entitlementToen', res.data.ascendToken)
+                navigate_to_secondscreen()
+            })
+            .catch((err) => console.log(err))
     }
 
     const navigate_to_secondscreen = () => {
@@ -48,13 +64,13 @@ function JoinSessionForm () {
 
     const refresh_list = () => {
         axios 
-        .get("/api/sessions")
+        .get("/api/sessions/")
         .then((res) => setSessionsList(res.data))
         .catch((err) => console.log(err)); 
     };
 
     return(
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} action='/secondscreen'>
             <label htmlFor="session-search">
                 <span className="visually-hidden">Join a session</span>
             </label>
