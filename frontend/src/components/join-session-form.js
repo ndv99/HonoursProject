@@ -1,77 +1,91 @@
 import './../styles/components/search.css'
 import { Form, Button } from 'reactstrap'
-import { Component } from 'react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import Cookies from 'universal-cookie';
 
-class JoinSessionForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state  = {
-            sessions_list: [],
-            value: '',
-            redirect: false,
-        };
-    
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+function JoinSessionForm () {
+
+    const [sessions_list, setSessionsList] = useState([])
+    const [value, setValue] = useState("")
+
+    const cookies = new Cookies();
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        refresh_list()
+    }, [])
+
+    const handleChange = (event) => {
+        setValue(event.target.value);
     }
 
-    componentDidMount() {
-        this.refresh_list();
-    }
-
-    handleChange(event) {
-        this.setState({value: event.target.value});
-    }
-
-    handleSubmit(event) {
+    const handleSubmit = () => {
         // alert('A code was submitted: ' + this.state.value);
 
-        this.refresh_list();
-        console.log(this.state.sessions_list)
+        refresh_list();
+        console.log(sessions_list)
 
-        let valid_code = this.state.sessions_list.find(obj => {
-            return obj.join_code === this.state.value;
-          })
+        let valid_code = sessions_list.find(obj => {
+            return obj.join_code === value;
+        })
 
         if (valid_code){
-            const cookies = new Cookies();
-            cookies.set('session_code', this.state.value, {path: '/'})
+            
+            cookies.set('session_code', value, {path: '/'})
+
+            const session_id = valid_code.id
+            cookies.set('session_id', session_id, {path: '/'})
+
+            join_session(session_id)
 
             // this.state.redirect = true;
-            this.setState(this.state.redirect, true)
+            // setRedirect(true)
         } else {
-            alert("Uh oh, " + this.state.value + " is not a valid session code!")
+            alert("Uh oh, " + value + " is not a valid session code!")
         }
-
-        event.preventDefault();
     }
 
-    refresh_list = () => {
+    const join_session = (session_id) => {
+        console.log("Joining session")
+        axios.patch(`/api/sessions/${session_id}/`, {devices: [{}]})
+            .then((res) => {
+                console.log("Session joined")
+                cookies.set('device_id', res.data.devices.at(-1).id)
+                cookies.set('entitlementToken', res.data.ascendToken)
+                navigate_to_secondscreen()
+            })
+            .catch((err) => console.log(err))
+    }
+
+    const navigate_to_secondscreen = () => {
+        navigate('/secondscreen/', {replace: true})
+    }
+
+    const refresh_list = () => {
         axios 
-        .get("/api/sessions")
-        .then((res) => this.setState({ sessions_list: res.data }))
+        .get("/api/sessions/")
+        .then((res) => setSessionsList(res.data))
         .catch((err) => console.log(err)); 
     };
 
-    render(){
-        return(
-            <Form onSubmit={this.handleSubmit} action="/waiting">
-                <label htmlFor="session-search">
-                    <span className="visually-hidden">Join a session</span>
-                </label>
-                <input
-                    type="text"
-                    id="session-search"
-                    value={this.state.value}
-                    onChange={this.handleChange}
-                    placeholder="Enter your session code here"
-                />
-                <Button color="primary" type="submit">Join</Button>
-            </Form>
-        )
-    }
+    return(
+        <Form onSubmit={handleSubmit} action='/secondscreen'>
+            <label htmlFor="session-search">
+                <span className="visually-hidden">Join a session</span>
+            </label>
+            <input
+                type="text"
+                id="session-search"
+                value={value}
+                onChange={handleChange}
+                placeholder="Enter your session code here"
+            />
+            <Button color="primary" type="submit">Join</Button>
+        </Form>
+    )
 }
 
 export default JoinSessionForm;

@@ -24,7 +24,10 @@ class App extends Component{
   refresh_list = () => {
     axios 
     .get("/api/sessions")
-    .then((res) => this.setState({ sessions_list: res.data }))
+    .then((res) => {
+      this.setState({ sessions_list: res.data })
+      console.log(res.data)
+    })
     .catch((err) => console.log(err)); 
   };
 
@@ -55,6 +58,7 @@ class App extends Component{
                 {this.renderItems()}
               </ul> */}
               <JoinSessionForm />
+              <a href='/broadcast/'>Video...</a>
             </div>
           </div>
         </div>

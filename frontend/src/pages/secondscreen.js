@@ -6,14 +6,15 @@ import { Waiting } from '../components/waiting.js';
 import axios from "axios";
 import LoadingSpinner from '../components/loading-spinner'
 import { Container, Row, Col } from "reactstrap";
+import Cookies from "universal-cookie";
 
 export const SecondScreen = () => {
 
     // this will later be changed to use props based on whatever the control device chooses to do
-    const [reddit, setReddit] = useState(true)
+    const [reddit, setReddit] = useState(false)
     const [twitter, setTwitter] = useState(false)
-    const [showTelemetry, setShowTelemetry] = useState(true)
-    const [waiting, setWaiting] = useState(false)
+    const [showTelemetry, setShowTelemetry] = useState(false)
+    const [waiting, setWaiting] = useState(true)
 
     const [isLoading, setLoading] = useState(true)
     const [error, setError] = useState("")
@@ -27,6 +28,10 @@ export const SecondScreen = () => {
 
     const [before, setBefore] = useState(0)
     const [after, setAfter] = useState(0)
+
+    const [counter, setCounter] = useState(0)
+
+    const cookies = new Cookies()
     
     useEffect(() => {
         // console.log(`Initial state of raceFinished: ${raceFinished}`)
@@ -56,7 +61,7 @@ export const SecondScreen = () => {
                 driverlist[driver].CurrentSector = 1
                 driverlist[driver].CurrentLap = getKeyByValue(repairedTelemetry[parseInt(driverlist[driver].DriverNumber)].LapNumber, 1)
 
-                console.log(driverlist[driver])
+                // console.log(driverlist[driver])
             }
 
             setBefore(driverlist[0].CurrentLapStartDate)
@@ -65,6 +70,8 @@ export const SecondScreen = () => {
             setDrivers(driverlist)
             setTelemetry(telemetry => (repairedTelemetry))
             setLoading(false)
+
+            console.log("Finished loading driver data.")
         })
         .catch((err) => {
             console.log(err)
@@ -72,6 +79,63 @@ export const SecondScreen = () => {
             setLoading(false)
         })
     }, [])
+
+    useEffect(() => {
+        const timer = setTimeout(() => setCounter(counter + 1), 2000)
+
+        if (!isLoading) {
+            console.log('device fetch is happening')
+    
+            axios.get(`/api/sessions/${cookies.get('session_id')}`)
+            .then((res) => {
+    
+                // console.log(`Device ID in cookie:`)
+                // console.log(cookies.get('device_id'))
+    
+                const devices = res.data.devices
+    
+                // console.log(devices)
+    
+                let device;
+    
+                for (var d in devices) {
+                    // console.log(`device ID in list: ${devices[d].id}`)
+                    // console.log(`device ID in cookie: ${cookies.get('device_id')}`)
+                    if (devices[d].id === parseInt(cookies.get('device_id'))){
+                        console.log("we've got a match")
+                        device = devices[d]
+                        break
+                    }
+                }
+    
+                // console.log(device)
+    
+                if (device) {
+                    console.log(`Device mode: ${device.mode}`)
+                    if (device.mode === 0) {
+                        setReddit(false)
+                        setShowTelemetry(false)
+                        setWaiting(true)
+                    } else if (device.mode === 1) {
+                        setReddit(false)
+                        setShowTelemetry(true)
+                        setWaiting(false)
+                    } else if (device.mode === 2) {
+                        setReddit(true)
+                        setShowTelemetry(false)
+                        setWaiting(false)
+                    } else if (device.mode === 3) {
+                        setReddit(true)
+                        setTelemetry(true)
+                        setWaiting(false)
+                    }
+                }
+                // console.log(res.data)
+            })
+            .catch((err) => console.log(err))
+            }
+        return () => clearTimeout(timer)
+    }, [counter])
 
     useEffect(() => {
         sortDriversByLapStartTimes()
